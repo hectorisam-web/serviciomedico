@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" 
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8" />
+    <title>Login - Servicio Médico</title>
+    <style>
+        body { 
+            font-family: Arial, sans-serif; 
+            display: flex; 
+            justify-content: center; 
+            align-items: center; 
+            height: 100vh; 
+            background: #f0f2f5; 
+            margin: 0;
+        }
+        .login-card { 
+            background: white; 
+            padding: 2rem; 
+            border-radius: 8px; 
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1); 
+            width: 320px;
+        }
+        h2 { text-align: center; color: #333; margin-bottom: 20px; }
+        input { 
+            display: block; 
+            width: 100%; 
+            margin: 10px 0; 
+            padding: 12px; 
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box; /* Evita que el input se salga del cuadro */
+        }
+        button { 
+            width: 100%; 
+            padding: 12px; 
+            background: #007bff; 
+            color: white; 
+            border: none; 
+            border-radius: 4px; 
+            cursor: pointer; 
+            font-size: 16px;
+            margin-top: 10px;
+        }
+        button:hover { background: #0056b3; }
+        .error-msg { 
+            color: #d9534f; 
+            background: #f9dfdf;
+            padding: 10px;
+            border-radius: 4px;
+            text-align: center; 
+            margin-top: 15px; 
+            font-size: 14px;
+            border: 1px solid #d9534f;
+        }
+    </style>
+</head>
+<body>
+    <div class="login-card">
+        <h2>Servicio Médico</h2>
+        
+        <form th:action="@{/login}" method="post">
+            <!-- Corregido: name="username" y required="required" -->
+            <input type="text" name="username" placeholder="Usuario" required="required" />
+            
+            <!-- Corregido: name="password" y required="required" -->
+            <input type="password" name="password" placeholder="Contraseña" required="required" />
+            
+            <button type="submit">Entrar</button>
+        </form>
+
+        <div th:if="${param.error}" class="error-msg">
+            Usuario o clave incorrectos
+        </div>
+    </div>
+</body>
+</html>

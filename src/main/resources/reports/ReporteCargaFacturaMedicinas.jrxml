@@ -1,0 +1,266 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.21.5.final using JasperReports Library version 6.21.5-74d586df47b25dbd05bd0957999819196e59934a  -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="ControlDiario" pageWidth="842" pageHeight="595" orientation="Landscape" whenNoDataType="AllSectionsNoDetail" columnWidth="802" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="0" uuid="cd3df208-1f01-461e-9efe-3ee6c21a9dcb">
+	<property name="template.engine" value="tabular_template"/>
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="Intranet"/>
+	<style name="Title" fontName="Arial" fontSize="26" isBold="true"/>
+	<style name="SubTitle" forecolor="#666666" fontName="Arial" fontSize="18"/>
+	<style name="Column header" forecolor="#FFFFFF" fontName="Arial" fontSize="12" isBold="true"/>
+	<style name="Table">
+		<box>
+			<pen lineWidth="1.0" lineColor="#000000"/>
+			<topPen lineWidth="1.0" lineColor="#000000"/>
+			<leftPen lineWidth="1.0" lineColor="#000000"/>
+			<bottomPen lineWidth="1.0" lineColor="#000000"/>
+			<rightPen lineWidth="1.0" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="Bold" fontSize="13"/>
+	<subDataset name="tableDataset" uuid="19567587-a257-4a46-99b9-f6c9fb258402">
+		<queryString>
+			<![CDATA[]]>
+		</queryString>
+	</subDataset>
+	<parameter name="fecha" class="java.sql.Date"/>
+	<parameter name="NUMERO_FACTURA" class="java.lang.String"/>
+	<parameter name="FECHA_FACTURA" class="java.sql.Date"/>
+	<parameter name="LOGO_PATH" class="java.lang.Object"/>
+	<parameter name="REPORT_DATE" class="java.sql.Date"/>
+	<parameter name="uuid" class="java.lang.String"/>
+	<queryString>
+		<![CDATA[SELECT 
+    f.numero_factura AS numeroFactura,
+    f.fecha_factura AS fechaFactura,
+    f.proveedor AS proveedor,
+    f.observaciones AS observaciones,
+    f.activo AS facturaActiva,
+    l.uuid_medicamento AS uuidMedicamento,
+    l.numero_lote AS numerolote,
+    l.stock_inicial AS stockInicial,
+    l.stock_disponible AS stockdisponible,
+    l.fecha_vencimiento AS fechavencimiento,
+    m.descripcionmedicamento AS medicamento,
+    p.descripcion AS descripcionPresentacion
+FROM factura f
+JOIN medicamento_lotes l ON l.uuid_factura = f.uuid_factura
+JOIN medicamentos m ON m.uuid_medicamento = l.uuid_medicamento
+LEFT JOIN maestro p ON p.uuid = m.uuid_presentacion
+WHERE f.uuid_factura = CAST($P{uuid} AS uuid)]]>
+	</queryString>
+	<field name="numerofactura" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="numerofactura"/>
+		<property name="com.jaspersoft.studio.field.label" value="numerofactura"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="factura"/>
+	</field>
+	<field name="fechafactura" class="java.sql.Date">
+		<property name="com.jaspersoft.studio.field.name" value="fechafactura"/>
+		<property name="com.jaspersoft.studio.field.label" value="fechafactura"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="factura"/>
+	</field>
+	<field name="proveedor" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="proveedor"/>
+		<property name="com.jaspersoft.studio.field.label" value="proveedor"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="factura"/>
+	</field>
+	<field name="observaciones" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="observaciones"/>
+		<property name="com.jaspersoft.studio.field.label" value="observaciones"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="factura"/>
+	</field>
+	<field name="facturaactiva" class="java.lang.Boolean">
+		<property name="com.jaspersoft.studio.field.name" value="facturaactiva"/>
+		<property name="com.jaspersoft.studio.field.label" value="facturaactiva"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="factura"/>
+	</field>
+	<field name="uuidmedicamento" class="java.util.UUID">
+		<property name="com.jaspersoft.studio.field.name" value="uuidmedicamento"/>
+		<property name="com.jaspersoft.studio.field.label" value="uuidmedicamento"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="medicamento_lotes"/>
+	</field>
+	<field name="numerolote" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="numerolote"/>
+		<property name="com.jaspersoft.studio.field.label" value="numerolote"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="medicamento_lotes"/>
+	</field>
+	<field name="stockinicial" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.name" value="stockinicial"/>
+		<property name="com.jaspersoft.studio.field.label" value="stockinicial"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="medicamento_lotes"/>
+	</field>
+	<field name="stockdisponible" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.name" value="stockdisponible"/>
+		<property name="com.jaspersoft.studio.field.label" value="stockdisponible"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="medicamento_lotes"/>
+	</field>
+	<field name="fechavencimiento" class="java.sql.Date">
+		<property name="com.jaspersoft.studio.field.name" value="fechavencimiento"/>
+		<property name="com.jaspersoft.studio.field.label" value="fechavencimiento"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="medicamento_lotes"/>
+	</field>
+	<field name="medicamento" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="medicamento"/>
+		<property name="com.jaspersoft.studio.field.label" value="medicamento"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="medicamentos"/>
+	</field>
+	<field name="descripcionpresentacion" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="descripcionpresentacion"/>
+		<property name="com.jaspersoft.studio.field.label" value="descripcionpresentacion"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="maestro"/>
+	</field>
+	<background>
+		<band height="575" splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="129">
+			<property name="com.jaspersoft.studio.unit.height" value="px"/>
+			<image onErrorType="Blank">
+				<reportElement x="0" y="0" width="120" height="60" uuid="c2361014-085a-4ce7-871d-d0eb39b28ff6"/>
+				<imageExpression><![CDATA[$P{LOGO_PATH}]]></imageExpression>
+			</image>
+			<staticText>
+				<reportElement style="Bold" mode="Opaque" x="0" y="65" width="820" height="20" uuid="803fb329-9f4b-4630-9af9-aa3e56f7faae"/>
+				<textElement textAlignment="Center">
+					<font size="14"/>
+				</textElement>
+				<text><![CDATA[Reporte Carga Facturas Medicinas]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="0" y="85" width="820" height="15" uuid="30de8326-0b46-45bc-88ea-4c3fd9ca585a"/>
+				<textElement textAlignment="Center">
+					<font size="10"/>
+				</textElement>
+				<text><![CDATA[Ministerio del Poder Popular para el TURISMO]]></text>
+			</staticText>
+			<textField pattern="dd/MM/yyyy">
+				<reportElement x="0" y="105" width="200" height="15" uuid="60c9bf74-b84b-486e-9299-3f3c18929ba3"/>
+				<textFieldExpression><![CDATA["Fecha de Factura: " + new java.text.SimpleDateFormat("dd/MM/yyyy").format($P{FECHA_FACTURA})]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="300" y="105" width="200" height="15" uuid="1fb0f701-50c8-4349-ad5d-6bd33739f070"/>
+				<textFieldExpression><![CDATA["Número de Factura: " + $P{NUMERO_FACTURA}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="620" y="105" width="200" height="15" uuid="f0486eea-e307-4129-9aea-81e46beee51a"/>
+				<textFieldExpression><![CDATA["Fecha de Emisión: " + new java.text.SimpleDateFormat("dd/MM/yyyy").format($P{REPORT_DATE})]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement x="0" y="118" width="820" height="1" uuid="9be97e70-3b7a-4ef8-a5d0-dc38987b88a2"/>
+			</line>
+		</band>
+	</title>
+	<columnHeader>
+		<band height="25">
+			<staticText>
+				<reportElement x="0" y="3" width="150" height="15" uuid="d59fe16c-8853-4aa1-8f8c-1493684acaef"/>
+				<textElement textAlignment="Center">
+					<font size="9" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Medicamento]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="150" y="3" width="80" height="15" uuid="bb7e1a36-2602-459a-bb44-3d1d4d075656"/>
+				<textElement textAlignment="Center">
+					<font size="9" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Número Lote]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="230" y="3" width="90" height="15" uuid="1da1185e-3def-49c4-8aa9-6cecddb850c2"/>
+				<textElement textAlignment="Center">
+					<font size="9" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Vencimiento]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="320" y="3" width="70" height="15" uuid="c45dbd77-6ab8-455f-8dc0-4ef3aa47ee30"/>
+				<textElement textAlignment="Center">
+					<font size="9" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Stock Inicial]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="390" y="3" width="80" height="15" uuid="25c0256c-4d53-4bc1-a0bb-f216cd56eae0"/>
+				<textElement textAlignment="Center">
+					<font size="9" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Stock Disp.]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="470" y="3" width="150" height="15" uuid="1ddfbb61-829b-43d4-86d8-82c4dd684aa4"/>
+				<textElement textAlignment="Center">
+					<font size="9" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Proveedor]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="620" y="3" width="200" height="15" uuid="3c4311cd-8df9-4197-a9d9-ec97acb015a2"/>
+				<textElement textAlignment="Center">
+					<font size="9" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Observaciones]]></text>
+			</staticText>
+			<line>
+				<reportElement x="0" y="24" width="820" height="1" uuid="57d7f391-aea1-4148-9e59-74eb04357fc4"/>
+			</line>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="20">
+			<textField>
+				<reportElement x="0" y="2" width="150" height="16" uuid="944d8dfe-39fa-4de3-a2ef-f86a5f4abc2d"/>
+				<textFieldExpression><![CDATA[$F{medicamento}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="150" y="2" width="80" height="16" uuid="39931cdf-b317-4317-be93-fcddfbf583ed"/>
+				<textFieldExpression><![CDATA[$F{numerolote}]]></textFieldExpression>
+			</textField>
+			<textField pattern="dd/MM/yyyy">
+				<reportElement x="230" y="2" width="90" height="16" uuid="6857d023-8a04-4af1-a68e-2c80c9374be0"/>
+				<textFieldExpression><![CDATA[$F{fechavencimiento}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="320" y="2" width="70" height="16" uuid="6892ae05-81ba-4939-8cd3-e8e25481bd00"/>
+				<textFieldExpression><![CDATA[$F{stockinicial}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="390" y="2" width="80" height="16" uuid="c03633af-a6de-4ceb-b6fd-25e40604b348"/>
+				<textFieldExpression><![CDATA[$F{stockdisponible}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="470" y="2" width="150" height="16" uuid="909e2d84-225f-4f1b-9214-7b86170a01f4"/>
+				<textFieldExpression><![CDATA[$F{proveedor}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="620" y="2" width="200" height="16" uuid="b5222567-c45f-4c2b-aac7-51d342d1eb3f"/>
+				<textFieldExpression><![CDATA[$F{observaciones}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<pageFooter>
+		<band height="39">
+			<line>
+				<reportElement x="0" y="0" width="820" height="1" uuid="e06c7f0a-302b-406a-99c4-3f9d390b9414"/>
+			</line>
+			<textField>
+				<reportElement x="0" y="10" width="400" height="12" uuid="98ebfa58-f06c-4b90-a5b6-1cf5285d8eb1"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Sistema Médico Mintur – Hoja de Control de Inventario"]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="420" y="10" width="400" height="12" uuid="14b4325f-4710-4d6d-83c0-58ec697be1ff"/>
+				<textElement textAlignment="Right">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Página " + $V{PAGE_NUMBER} + " de " + $V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageFooter>
+	<summary>
+		<band height="200" splitType="Stretch">
+			<property name="local_mesure_unitheight" value="pixel"/>
+		</band>
+	</summary>
+</jasperReport>

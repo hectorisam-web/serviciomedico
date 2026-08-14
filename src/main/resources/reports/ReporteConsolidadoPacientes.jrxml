@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.21.5.final using JasperReports Library version 6.21.5-74d586df47b25dbd05bd0957999819196e59934a  -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="ControlDiario" pageWidth="842" pageHeight="595" orientation="Landscape" whenNoDataType="AllSectionsNoDetail" columnWidth="802" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="0" uuid="cd3df208-1f01-461e-9efe-3ee6c21a9dcb">
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="Intranet"/>
+	<style name="Crosstab_CH" mode="Opaque" backcolor="#F0F8FF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#FFFFFF"/>
+		</box>
+	</style>
+	<style name="Crosstab_CD" mode="Opaque" backcolor="#FFFFFF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#FFFFFF"/>
+		</box>
+	</style>
+	<parameter name="LOGO_PATH" class="java.lang.Object"/>
+	<parameter name="fechaInicio" class="java.sql.Date"/>
+	<parameter name="fechaFin" class="java.sql.Date"/>
+	<parameter name="REPORT_DATE" class="java.sql.Date"/>
+	<queryString>
+		<![CDATA[SELECT m.descripcion AS especialidad, 
+        TO_CHAR(DATE_TRUNC('week', cd.fecha_control), 'DD/MM') || ' al ' || TO_CHAR(DATE_TRUNC('week', cd.fecha_control) + INTERVAL '4 day', 'DD/MM') AS numero_semana, 
+        COUNT(cd.uuid_control) AS total_pacientes 
+        FROM control_diario cd 
+        JOIN medicos med ON cd.uuid_medico = med.uuid_medico 
+        JOIN maestro m ON med.uuid_especialidad = m.uuid 
+        WHERE cd.fecha_control BETWEEN $P{fechaInicio} AND $P{fechaFin} 
+        GROUP BY m.descripcion, numero_semana ORDER BY m.descripcion ASC, numero_semana ASC]]>
+	</queryString>
+	<field name="especialidad" class="java.lang.String"/>
+	<field name="numero_semana" class="java.lang.String"/>
+	<field name="total_pacientes" class="java.lang.Long"/>
+	<variable name="TOTAL_GENERAL" class="java.lang.Long" calculation="Sum">
+		<variableExpression><![CDATA[$F{total_pacientes}]]></variableExpression>
+	</variable>
+	<summary>
+		<band height="250" splitType="Stretch">
+			<crosstab>
+				<reportElement x="0" y="0" width="802" height="150" uuid="85d03df2-10af-45e6-bf6e-3bd21d0b896e"/>
+				<crosstabHeaderCell>
+					<cellContents mode="Opaque" style="Crosstab_CH">
+						<staticText>
+							<reportElement x="5" y="0" width="155" height="30" uuid="a1b2c3d4-e5f6-7890-abcd-ef0123456789"/>
+							<textElement verticalAlignment="Middle">
+								<font size="9" isBold="true"/>
+							</textElement>
+							<text><![CDATA[Especialidad]]></text>
+						</staticText>
+					</cellContents>
+				</crosstabHeaderCell>
+				<rowGroup name="especialidad" width="160">
+					<bucket class="java.lang.String">
+						<bucketExpression><![CDATA[$F{especialidad}]]></bucketExpression>
+					</bucket>
+					<crosstabRowHeader>
+						<cellContents mode="Opaque" style="Crosstab_CH">
+							<textField>
+								<reportElement x="5" y="0" width="155" height="20" uuid="7e52c0be-ea0e-4661-8853-f95fad7d7af8"/>
+								<textElement verticalAlignment="Middle">
+									<font size="9"/>
+								</textElement>
+								<textFieldExpression><![CDATA[$V{especialidad}]]></textFieldExpression>
+							</textField>
+						</cellContents>
+					</crosstabRowHeader>
+					<crosstabTotalRowHeader>
+						<cellContents/>
+					</crosstabTotalRowHeader>
+				</rowGroup>
+				<columnGroup name="numero_semana" height="30">
+					<bucket class="java.lang.String">
+						<bucketExpression><![CDATA[$F{numero_semana}]]></bucketExpression>
+					</bucket>
+					<crosstabColumnHeader>
+						<cellContents mode="Opaque" style="Crosstab_CH">
+							<textField>
+								<reportElement x="0" y="0" width="130" height="30" uuid="b29f2cdc-2594-4e9f-84b2-b6e870f87a50"/>
+								<textElement textAlignment="Center" verticalAlignment="Middle">
+									<font size="9" isBold="true"/>
+								</textElement>
+								<textFieldExpression><![CDATA[$V{numero_semana}]]></textFieldExpression>
+							</textField>
+						</cellContents>
+					</crosstabColumnHeader>
+					<crosstabTotalColumnHeader>
+						<cellContents/>
+					</crosstabTotalColumnHeader>
+				</columnGroup>
+				<measure name="total_pacientes_MEASURE" class="java.lang.Long" calculation="Sum">
+					<measureExpression><![CDATA[$F{total_pacientes}]]></measureExpression>
+				</measure>
+				<crosstabCell width="130" height="20">
+					<cellContents mode="Opaque" style="Crosstab_CD">
+						<textField>
+							<reportElement x="0" y="0" width="130" height="20" uuid="82146971-f147-43b4-a69e-42c26b1a23cb"/>
+							<textElement textAlignment="Center" verticalAlignment="Middle">
+								<font size="9"/>
+							</textElement>
+							<textFieldExpression><![CDATA[$V{total_pacientes_MEASURE}]]></textFieldExpression>
+						</textField>
+					</cellContents>
+				</crosstabCell>
+			</crosstab>
+			<textField>
+				<reportElement x="0" y="160" width="802" height="30" uuid="f9876543-210a-4321-b000-000000000000"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font size="12" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA["TOTAL GENERAL: " + $V{TOTAL_GENERAL}]]></textFieldExpression>
+			</textField>
+		</band>
+	</summary>
+</jasperReport>

@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Gestión de Médicos - Servicio Médico</title>
+    <style>
+        body { font-family: sans-serif; margin: 20px; color: #333; }
+        table { width: 100%; border-collapse: collapse; margin-top: 20px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
+        th, td { padding: 12px; border: 1px solid #ccc; text-align: left; }
+        th { background-color: #0056b3; color: white; }
+        tr:nth-child(even) { background-color: #f9f9f9; }
+        .btn-update { padding: 10px 20px; background: #28a745; color: white; border: none; cursor: pointer; border-radius: 4px; }
+        .status-pill { padding: 4px 8px; border-radius: 12px; font-size: 0.85em; }
+        .active { background: #d4edda; color: #155724; }
+        .inactive { background: #f8d7da; color: #721c24; }
+    </style>
+</head>
+<body>
+
+    <h2>Listado de Médicos (PostgreSQL)</h2>
+    <button class="btn-update" onclick="fetchMedicos()">Cargar desde API</button>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Tratamiento</th>
+                <th>Nombre y Apellido</th>
+                <th>Cédula</th>
+                <th>Teléfono</th>
+                <th>Estatus</th>
+            </tr>
+        </thead>
+        <tbody id="lista-medicos">
+            <!-- Los datos se inyectarán aquí -->
+        </tbody>
+    </table>
+
+    <script>
+        function fetchMedicos() {
+            // Llamamos a tu endpoint api/medicos que devuelve el <ArrayList>
+            fetch('api/medicos')
+                .then(response => response.text()) // Leemos como texto por ser XML
+                .then(xmlData => {
+                    const parser = new DOMParser();
+                    const xml = parser.parseFromString(xmlData, "text/xml");
+                    const items = xml.getElementsByTagName("item");
+                    
+                    let htmlContenido = "";
+
+                    for (let i = 0; i < items.length; i++) {
+                        // Extraemos los datos basándonos en tu DDL y el XML previo
+                        const tratamiento = items[i].getElementsByTagName("tratamiento")[0]?.textContent || "Dr(a).";
+                        const nombre = items[i].getElementsByTagName("nombreCompleto")[0]?.textContent || 
+                                       items[i].getElementsByTagName("nombres_medico")[0]?.textContent;
+                        const cedula = items[i].getElementsByTagName("cedula_medico")[0]?.textContent;
+                        const telefono = items[i].getElementsByTagName("telefono_medico")[0]?.textContent || "N/A";
+                        const status = items[i].getElementsByTagName("status")[0]?.textContent === "true";
+
+                        htmlContenido += `
+                            <tr>
+                                <td>${tratamiento}</td>
+                                <td>${nombre}</td>
+                                <td>${cedula}</td>
+                                <td>${telefono}</td>
+                                <td>
+                                    <span class="status-pill ${status ? 'active' : 'inactive'}">
+                                        ${status ? 'Activo' : 'Inactivo'}
+                                    </span>
+                                </td>
+                            </tr>
+                        `;
+                    }
+
+                    document.getElementById('lista-medicos').innerHTML = htmlContenido;
+                })
+                .catch(err => {
+                    console.error("Error al obtener médicos:", err);
+                    alert("Error de conexión con el servidor PostgreSQL.");
+                });
+        }
+
+        // Carga inicial al entrar
+        document.addEventListener("DOMContentLoaded", fetchMedicos);
+    </script>
+</body>
+</html>

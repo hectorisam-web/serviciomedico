@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Servicio Médico - Menú Principal</title>
+    <style>
+        body { font-family: 'Segoe UI', sans-serif; background: #f4f7f6; margin: 0; display: flex; }
+        .sidebar { width: 250px; background: #2c3e50; color: white; height: 100vh; padding: 20px; }
+        .sidebar h2 { text-align: center; border-bottom: 1px solid #34495e; padding-bottom: 20px; }
+        .menu-item { 
+            padding: 15px; margin: 10px 0; background: #34495e; border-radius: 8px; 
+            cursor: pointer; transition: 0.3s; text-align: center;
+        }
+        .menu-item:hover { background: #1abc9c; }
+        .main-content { flex-grow: 1; padding: 40px; }
+        .card-container { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; }
+        .card { background: white; padding: 20px; border-radius: 12px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); text-align: center; }
+        .card h3 { color: #2c3e50; }
+        .card p { font-size: 24px; font-weight: bold; color: #1abc9c; }
+    </style>
+</head>
+<body>
+
+    <div class="sidebar">
+        <h2>MINTUR</h2>
+        <div class="menu-item" onclick="location.href='/api/medicos'">Lista de Médicos</div>
+        <div class="menu-item">Control Diario</div>
+        <div class="menu-item">Farmacia / Stock</div>
+        <div class="menu-item">Facturación</div>
+    </div>
+
+    <div class="main-content">
+        <h1>Panel de Control Médico</h1>
+        <div class="card-container">
+            <div class="card">
+                <h3>Médicos Activos</h3>
+                <p id="count-medicos">...</p>
+            </div>
+            <div class="card">
+                <h3>Entregas Hoy</h3>
+                <p>12</p>
+            </div>
+            <div class="card">
+                <h3>Alertas Stock</h3>
+                <p style="color: #e74c3c;">3</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Pequeño script para conectar con tu API de inmediato
+        fetch('/api/medicos')
+            .then(res => res.json())
+            .then(data => {
+                document.getElementById('count-medicos').innerText = data.length;
+            });
+    </script>
+</body>
+</html>

@@ -1,0 +1,28 @@
+@echo off
+title Lanzador Servicio Medico WEB - Spring Boot
+color 0b
+
+:: Nos aseguramos de estar en la unidad X
+X:
+:: Entramos a la carpeta del proyecto web
+cd "\serviciomedico-web"
+
+echo ====================================================
+echo   INICIANDO MODO WEB: %CD%
+echo ====================================================
+
+:: Verificamos el wrapper de Maven
+if not exist "mvnw.cmd" (
+    echo [ERROR] No encuentro mvnw.cmd en la carpeta web.
+    echo Intentando usar maven global...
+    mvn clean spring-boot:run
+) else (
+    call .\mvnw.cmd clean spring-boot:run
+)
+
+if %ERRORLEVEL% NEQ 0 (
+    echo.
+    echo [ALERTA] El proceso se detuvo. Revisa errores de compilacion arriba.
+)
+
+pause
