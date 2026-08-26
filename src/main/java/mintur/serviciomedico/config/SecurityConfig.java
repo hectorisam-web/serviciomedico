@@ -56,12 +56,12 @@ public class SecurityConfig {
             // 2. Maestros y resto de reglas...
             .requestMatchers("/api/maestros/**").hasAnyAuthority(
                 "Administracion", "Control Diario Pacientes", "Titular/Familiares", "Personal Médico", "Maestro","Administrador de Sistemas",
-                "Administrador de Servico Medico"
+                "Administrador de Servico Medico", "Farmacia", "Citas"
             )
             
             // 3. Titulares, Medicos, Medicamentos
             .requestMatchers("/api/titulares/**").hasAnyAuthority("Titular/Familiares", "Control Diario Pacientes", "Administracion")
-            .requestMatchers("/api/medicos/**").hasAnyAuthority("Personal Médico", "Administracion", "Control Diario Pacientes", "Administrador de Sistemas","Administrador de Servico Medico")
+            .requestMatchers("/api/medicos/**").hasAnyAuthority("Personal Médico", "Administracion", "Control Diario Pacientes", "Administrador de Sistemas","Administrador de Servico Medico", "Citas")
                 
             /* 3.1 Medicamentos y Catálogo (Estas son las que controlarán el acceso correctamente)
             .requestMatchers(HttpMethod.GET, "/api/control-medicamento/**", "/api/control-medicamentos/**").hasAnyAuthority(
@@ -69,7 +69,7 @@ public class SecurityConfig {
             )*/
              // Permite las consultas GET del control de medicamentos sin exigir una autoridad estricta temporalmente
             .requestMatchers(HttpMethod.GET, "/api/control-medicamento/**").permitAll()   
-                
+              
             .requestMatchers(HttpMethod.POST, "/api/control-medicamento/**", "/api/control-medicamentos/**").hasAnyAuthority(
             "Entrega Medicamentos", "Control Diario", "Farmacia", "Administracion", "Administrador de Sistemas", "Personal Médico"
             )
@@ -77,11 +77,15 @@ public class SecurityConfig {
             "Entrega Medicamentos", "Control Diario", "Farmacia", "Administracion", "Administrador de Sistemas", "Personal Médico"
             )
                 
-            // 4. Inventarios / Reportes
-            .requestMatchers("/api/inventario/**").hasAnyAuthority("Inventario", "Administracion")
-                
-            .requestMatchers("/api/control-diario/**").hasAnyAuthority("Control Diario", "Administracion", "MEDICO")
-            .requestMatchers("/api/control-diario/hoy", "/api/control-medicamentos/**").hasAnyAuthority("Control Diario","Seguimiento", "Administracion", "Farmacia","Personal Medico")
+            // 4. Inventarios / Reportes (Pon las rutas específicas PRIMERO)
+            .requestMatchers("/api/control-diario/hoy").hasAnyAuthority("Control Diario", "Seguimiento", "Administracion", "Farmacia", "Personal Médico", "Personal Medico")
+            .requestMatchers("/api/control-diario/**").hasAnyAuthority("Control Diario", "Administracion", "MEDICO", "Farmacia")
+            .requestMatchers("/api/control-medicamentos/**").hasAnyAuthority("Control Diario", "Seguimiento", "Administracion", "Farmacia", "Personal Médico", "Personal Medico")
+             
+            // 4.1 Control de Citas 
+            .requestMatchers(HttpMethod.GET, "/api/citas/**").hasAnyAuthority("Control Diario",  "Administracion", "Administrador de Sistemas",  "Personal Médico", "Farmacia")
+            .requestMatchers(HttpMethod.POST, "/api/citas/**").hasAnyAuthority("Control Diario", "Administracion", "Administrador de Sistemas",  "Personal Médico", "Farmacia")
+            .requestMatchers(HttpMethod.PUT, "/api/citas/**").hasAnyAuthority("Control Diario",  "Administracion", "Administrador de Sistemas" , "Personal Médico", "Farmacia")  
                 
             // 5. Roles
             .requestMatchers("/api/roles/guardar").hasAuthority("Administracion")

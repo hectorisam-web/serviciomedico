@@ -64,7 +64,30 @@ public class ReporteController {
                 }
             }
         }
+        
+        // --- 1.5. CÁLCULO DINÁMICO DE RANGOS DE SEMANAS (LUNES A VIERNES) ---
+        if (allParams.containsKey("TRIMESTRE") && allParams.containsKey("ANO_FILTRO")) {
+            try {
+                int anio = Integer.parseInt(allParams.get("ANO_FILTRO"));
+                int trimestre = Integer.parseInt(allParams.get("TRIMESTRE"));
+                
+                int mesInicio = (trimestre - 1) * 3 + 1;
+                java.time.LocalDate fechaActual = java.time.LocalDate.of(anio, mesInicio, 1);
+                java.time.format.DateTimeFormatter formatter = java.time.format.DateTimeFormatter.ofPattern("dd/MM");
 
+                for (int i = 1; i <= 13; i++) {
+                    java.time.LocalDate lunes = fechaActual.with(java.time.temporal.TemporalAdjusters.previousOrSame(java.time.DayOfWeek.MONDAY));
+                    java.time.LocalDate viernes = lunes.plusDays(4);
+
+                    String rangoFecha = lunes.format(formatter) + "-" + viernes.format(formatter);
+                    jasperParams.put("LBL_SEM_" + i, rangoFecha);
+
+                    fechaActual = fechaActual.plusWeeks(1);
+                }
+            } catch (Exception e) {
+                logger.warning("No se pudieron calcular los rangos de semana dinámicos: " + e.getMessage());
+            }
+        }               
         // --- 2. PROCESAMIENTO DE MÉDICO ---
         String uuidMedico = allParams.get("uuidMedico");
         String nombreMedico = "General / Todos";
@@ -104,7 +127,7 @@ public class ReporteController {
         } catch (Exception e) {
             logger.warning("No se pudieron cargar algunos íconos institucionales: " + e.getMessage());
         }
-    
+        
         // --- 4. GENERACIÓN DEL PDF ---
         byte[] reportePdf = reportService.generarPdf(nombreReporte, jasperParams);
 

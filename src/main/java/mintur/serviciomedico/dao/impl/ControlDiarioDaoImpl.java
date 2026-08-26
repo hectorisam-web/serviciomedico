@@ -107,6 +107,8 @@ public class ControlDiarioDaoImpl implements ControlDiarioDao {
                             cd.observaciones,
                             cd.usuario_registro,
                             cd.status,
+                            cd.frecuencia_cardiaca,
+                            cd.spo2,
                             CASE 
                                 WHEN cd.uuid_titular_fam IS NOT NULL THEN TRIM(COALESCE(tf.nombres_familiar, '') || ' ' || COALESCE(tf.apellidos_familiar, ''))
                                 ELSE TRIM(COALESCE(t.nombre_titular, '') || ' ' || COALESCE(t.apellidos_titular, ''))
@@ -141,7 +143,8 @@ private ControlDiario mapControlDiarioFull(ResultSet rs) throws SQLException {
         c.setIndicaciones(rs.getString("indicaciones"));
         c.setObservaciones(rs.getString("observaciones"));
         c.setStatus(rs.getBoolean("status"));
-        
+        c.setFrecuenciaCardiaca(rs.getObject("frecuencia_cardiaca", Integer.class));
+        c.setSaturacionOxigeno(rs.getObject("spo2", Integer.class));
         // Mapeo limpio usando exactamente los alias definidos en el SQL
         c.setPaciente(rs.getString("paciente"));
         c.setNombreMedico(rs.getString("nombreMedico"));
@@ -169,7 +172,9 @@ private ControlDiario mapControlDiarioFull(ResultSet rs) throws SQLException {
                 tension_sistolica = ?,
                 tension_diastolica = ?,
                 talla_cm = ?,
-                temperatura = ?
+                temperatura = ?,
+                frecuencia_cardiaca = ?,
+                spo2 = ?     
             WHERE uuid_control = ?::uuid
         """;
 
@@ -183,7 +188,9 @@ private ControlDiario mapControlDiarioFull(ResultSet rs) throws SQLException {
             c.getTensionDiastolica(),
             c.getTallaCm(),
             c.getTemperatura(),
-            c.getUuidControl()
+            c.getFrecuenciaCardiaca(),   // 10mo parámetro (frecuencia_cardiaca)
+            c.getSaturacionOxigeno(),    // 11avo parámetro (spo2)
+            c.getUuidControl()           // 12avo parámetro (WHERE uuid_control)
         );
     }
     

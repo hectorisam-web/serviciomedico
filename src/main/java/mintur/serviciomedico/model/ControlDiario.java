@@ -27,6 +27,8 @@ public class ControlDiario {
     private BigDecimal pesoKg;
     private Integer tensionSistolica;
     private Integer tensionDiastolica;
+    private Integer frecuencia_cardiaca;
+    private Integer spo2;
     private BigDecimal temperatura;
 
     private String uuidMedico;
@@ -74,6 +76,12 @@ public class ControlDiario {
 
     public Integer getTensionDiastolica() { return tensionDiastolica; }
     public void setTensionDiastolica(Integer tensionDiastolica) { this.tensionDiastolica = tensionDiastolica; }
+    
+    public Integer getFrecuenciaCardiaca() { return frecuencia_cardiaca; }
+    public void setFrecuenciaCardiaca(Integer frecuencia_cardiaca) { this.frecuencia_cardiaca = frecuencia_cardiaca; }
+
+    public Integer getSaturacionOxigeno() { return spo2; }
+    public void setSaturacionOxigeno(Integer spo2) { this.spo2 = spo2; }
 
     public BigDecimal getTemperatura() { return temperatura; }
     public void setTemperatura(BigDecimal temperatura) { this.temperatura = temperatura; }

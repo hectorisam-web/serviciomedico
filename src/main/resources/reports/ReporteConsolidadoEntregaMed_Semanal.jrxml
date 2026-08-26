@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.21.5.final using JasperReports Library version 6.21.5-74d586df47b25dbd05bd0957999819196e59934a  -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="ControlDiario" pageWidth="842" pageHeight="595" orientation="Landscape" whenNoDataType="AllSectionsNoDetail" columnWidth="802" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="0" uuid="cd3df208-1f01-461e-9efe-3ee6c21a9dcb">
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="Intranet"/>
+	<parameter name="LOGO_PATH" class="java.lang.Object"/>
+	<parameter name="fechaInicio" class="java.sql.Date"/>
+	<parameter name="fechaFin" class="java.sql.Date"/>
+	<parameter name="REPORT_DATE" class="java.sql.Date"/>
+	<parameter name="ANO_FILTRO" class="java.lang.String"/>
+	<queryString>
+		<![CDATA[SELECT 
+    m.descripcion AS presentacion,
+    med.descripcionmedicamento AS descripcion_tableta,
+    SUM(CASE WHEN EXTRACT(MONTH FROM cd.fecha_control) = 1 THEN cdm.cantidad ELSE 0 END) AS enero,
+    SUM(CASE WHEN EXTRACT(MONTH FROM cd.fecha_control) = 2 THEN cdm.cantidad ELSE 0 END) AS febrero,
+    SUM(CASE WHEN EXTRACT(MONTH FROM cd.fecha_control) = 3 THEN cdm.cantidad ELSE 0 END) AS marzo,
+    SUM(CASE WHEN EXTRACT(MONTH FROM cd.fecha_control) = 4 THEN cdm.cantidad ELSE 0 END) AS abril,
+    SUM(CASE WHEN EXTRACT(MONTH FROM cd.fecha_control) = 5 THEN cdm.cantidad ELSE 0 END) AS mayo,
+    SUM(CASE WHEN EXTRACT(MONTH FROM cd.fecha_control) = 6 THEN cdm.cantidad ELSE 0 END) AS junio,
+    SUM(CASE WHEN EXTRACT(MONTH FROM cd.fecha_control) = 7 THEN cdm.cantidad ELSE 0 END) AS julio,
+    SUM(CASE WHEN EXTRACT(MONTH FROM cd.fecha_control) = 8 THEN cdm.cantidad ELSE 0 END) AS agosto,
+    SUM(CASE WHEN EXTRACT(MONTH FROM cd.fecha_control) = 9 THEN cdm.cantidad ELSE 0 END) AS septiembre,
+    SUM(CASE WHEN EXTRACT(MONTH FROM cd.fecha_control) = 10 THEN cdm.cantidad ELSE 0 END) AS octubre,
+    SUM(CASE WHEN EXTRACT(MONTH FROM cd.fecha_control) = 11 THEN cdm.cantidad ELSE 0 END) AS noviembre,
+    SUM(CASE WHEN EXTRACT(MONTH FROM cd.fecha_control) = 12 THEN cdm.cantidad ELSE 0 END) AS diciembre
+FROM 
+    control_diario_medicamento cdm
+JOIN 
+    control_diario cd ON cdm.uuid_control::text = cd.uuid_control::text
+JOIN 
+    medicamentos med ON cdm.uuid_medicamento::text = med.uuid_medicamento::text
+JOIN 
+    maestro m ON med.uuid_presentacion::text = m.uuid::text
+WHERE 
+    EXTRACT(YEAR FROM cd.fecha_control)::integer = $P{ANO_FILTRO}::integer
+GROUP BY 
+    m.descripcion, 
+    med.descripcionmedicamento
+ORDER BY 
+    m.descripcion ASC, 
+    med.descripcionmedicamento ASC;]]>
+	</queryString>
+	<field name="presentacion" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="presentacion"/>
+		<property name="com.jaspersoft.studio.field.label" value="presentacion"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="maestro"/>
+	</field>
+	<field name="descripcion_tableta" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="descripcion_tableta"/>
+		<property name="com.jaspersoft.studio.field.label" value="descripcion_tableta"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="medicamentos"/>
+	</field>
+	<field name="enero" class="java.lang.Long">
+		<property name="com.jaspersoft.studio.field.name" value="enero"/>
+		<property name="com.jaspersoft.studio.field.label" value="enero"/>
+	</field>
+	<field name="febrero" class="java.lang.Long">
+		<property name="com.jaspersoft.studio.field.name" value="febrero"/>
+		<property name="com.jaspersoft.studio.field.label" value="febrero"/>
+	</field>
+	<field name="marzo" class="java.lang.Long">
+		<property name="com.jaspersoft.studio.field.name" value="marzo"/>
+		<property name="com.jaspersoft.studio.field.label" value="marzo"/>
+	</field>
+	<field name="abril" class="java.lang.Long">
+		<property name="com.jaspersoft.studio.field.name" value="abril"/>
+		<property name="com.jaspersoft.studio.field.label" value="abril"/>
+	</field>
+	<field name="mayo" class="java.lang.Long">
+		<property name="com.jaspersoft.studio.field.name" value="mayo"/>
+		<property name="com.jaspersoft.studio.field.label" value="mayo"/>
+	</field>
+	<field name="junio" class="java.lang.Long">
+		<property name="com.jaspersoft.studio.field.name" value="junio"/>
+		<property name="com.jaspersoft.studio.field.label" value="junio"/>
+	</field>
+	<field name="julio" class="java.lang.Long">
+		<property name="com.jaspersoft.studio.field.name" value="julio"/>
+		<property name="com.jaspersoft.studio.field.label" value="julio"/>
+	</field>
+	<field name="agosto" class="java.lang.Long">
+		<property name="com.jaspersoft.studio.field.name" value="agosto"/>
+		<property name="com.jaspersoft.studio.field.label" value="agosto"/>
+	</field>
+	<field name="septiembre" class="java.lang.Long">
+		<property name="com.jaspersoft.studio.field.name" value="septiembre"/>
+		<property name="com.jaspersoft.studio.field.label" value="septiembre"/>
+	</field>
+	<field name="octubre" class="java.lang.Long">
+		<property name="com.jaspersoft.studio.field.name" value="octubre"/>
+		<property name="com.jaspersoft.studio.field.label" value="octubre"/>
+	</field>
+	<field name="noviembre" class="java.lang.Long">
+		<property name="com.jaspersoft.studio.field.name" value="noviembre"/>
+		<property name="com.jaspersoft.studio.field.label" value="noviembre"/>
+	</field>
+	<field name="diciembre" class="java.lang.Long">
+		<property name="com.jaspersoft.studio.field.name" value="diciembre"/>
+		<property name="com.jaspersoft.studio.field.label" value="diciembre"/>
+	</field>
+	<title>
+		<band height="100">
+			<staticText>
+				<reportElement mode="Opaque" x="0" y="39" width="820" height="20" uuid="21f78c92-68e5-4087-ab15-7a1dc8671f48"/>
+				<textElement textAlignment="Center">
+					<font size="14" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Reporte Entrega de Medicinas]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="140" y="62" width="580" height="28" uuid="42dc2ede-3874-4c4f-ad4b-902d782f141c">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Center">
+					<font size="13" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Periodo desde " + new java.text.SimpleDateFormat("dd/MM/yyyy").format($P{fechaInicio}) + " al " + new java.text.SimpleDateFormat("dd/MM/yyyy").format($P{fechaFin})]]></textFieldExpression>
+			</textField>
+			<image>
+				<reportElement x="0" y="0" width="120" height="60" uuid="c2361014-085a-4ce7-871d-d0eb39b28ff6"/>
+				<imageExpression><![CDATA[$P{LOGO_PATH} != null ? $P{LOGO_PATH} : "X:/ServicioMedico/serviciomedico/src/main/resources/icons/Logo_Turismo.png"]]></imageExpression>
+			</image>
+		</band>
+	</title>
+	<summary>
+		<band height="280" splitType="Stretch">
+			<property name="com.jaspersoft.studio.unit.height" value="px"/>
+		</band>
+	</summary>
+</jasperReport>

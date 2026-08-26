@@ -23,6 +23,8 @@
     cd.diagnostico,
     cd.indicaciones,
     cd.observaciones,
+    cd.frecuencia_cardiaca,
+    cd.spo2,
 
     -- Datos del familiar (si existe)
     tf.nombres_familiar,
@@ -128,6 +130,16 @@ WHERE ($P{uuidControl} IS NOT NULL AND cd.uuid_control = CAST($P{uuidControl} AS
 	<field name="observaciones" class="java.lang.String">
 		<property name="com.jaspersoft.studio.field.name" value="observaciones"/>
 		<property name="com.jaspersoft.studio.field.label" value="observaciones"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="control_diario"/>
+	</field>
+	<field name="frecuencia_cardiaca" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.name" value="frecuencia_cardiaca"/>
+		<property name="com.jaspersoft.studio.field.label" value="frecuencia_cardiaca"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="control_diario"/>
+	</field>
+	<field name="spo2" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.name" value="spo2"/>
+		<property name="com.jaspersoft.studio.field.label" value="spo2"/>
 		<property name="com.jaspersoft.studio.field.tree.path" value="control_diario"/>
 	</field>
 	<field name="nombres_familiar" class="java.lang.String">
@@ -385,11 +397,27 @@ WHERE ($P{uuidControl} IS NOT NULL AND cd.uuid_control = CAST($P{uuidControl} AS
 					<reportElement x="85" y="60" width="80" height="15" uuid="49920ed2-c00e-40b0-9a3a-6d756a0fc547"/>
 					<textFieldExpression><![CDATA[$F{temperatura}]]></textFieldExpression>
 				</textField>
+				<staticText>
+					<reportElement x="0" y="73" width="80" height="15" uuid="564dd897-5bbb-451e-8f50-eb9ceb4e1bdb"/>
+					<text><![CDATA[Frecuencia Card:]]></text>
+				</staticText>
+				<textField>
+					<reportElement x="85" y="73" width="80" height="15" uuid="0df06a37-a2ee-46ba-8e66-e32af076235f"/>
+					<textFieldExpression><![CDATA[$F{frecuencia_cardiaca}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement x="85" y="84" width="80" height="15" uuid="39b1f1c4-9a6c-4f54-b49f-f31fea673f4b"/>
+					<textFieldExpression><![CDATA[$F{spo2}]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement x="0" y="84" width="80" height="15" uuid="9f9ee069-dd14-4022-8495-57de6041b0e9"/>
+					<text><![CDATA[Saturacion Oxig.]]></text>
+				</staticText>
 			</frame>
 			<frame>
 				<reportElement x="22" y="90" width="516" height="40" uuid="d1f9a7c2-3e4b-4f6a-8d9e-1a2b3c4d5e6f"/>
 				<textField textAdjust="StretchHeight">
-					<reportElement x="0" y="0" width="516" height="30" uuid="f3d4e5f6-7a8b-4c9d-0e1f-2a3b4c5d6e7f"/>
+					<reportElement x="0" y="5" width="516" height="30" uuid="f3d4e5f6-7a8b-4c9d-0e1f-2a3b4c5d6e7f"/>
 					<textElement textAlignment="Justified">
 						<font size="10"/>
 					</textElement>
@@ -399,7 +427,7 @@ WHERE ($P{uuidControl} IS NOT NULL AND cd.uuid_control = CAST($P{uuidControl} AS
 		</band>
 	</pageHeader>
 	<detail>
-		<band height="180" splitType="Stretch">
+		<band height="213" splitType="Stretch">
 			<staticText>
 				<reportElement x="20" y="10" width="100" height="15" uuid="c1d2e3f4-5a6b-7c8d-9e0f-1a2b3c4d5e6f"/>
 				<textElement>
@@ -415,28 +443,28 @@ WHERE ($P{uuidControl} IS NOT NULL AND cd.uuid_control = CAST($P{uuidControl} AS
 				<textFieldExpression><![CDATA[$F{diagnostico} == null || $F{diagnostico}.trim().isEmpty() ? "No especificado" : $F{diagnostico}]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement x="20" y="65" width="150" height="15" uuid="c3d4e5f6-7a8b-8c9d-0e1f-2a3b4c5d6e7f"/>
+				<reportElement x="20" y="79" width="150" height="15" uuid="c3d4e5f6-7a8b-8c9d-0e1f-2a3b4c5d6e7f"/>
 				<textElement>
 					<font fontName="Arial" size="10" isBold="true"/>
 				</textElement>
 				<text><![CDATA[Indicaciones / Tratamiento:]]></text>
 			</staticText>
 			<textField textAdjust="StretchHeight">
-				<reportElement x="20" y="82" width="516" height="30" uuid="d4e5f6a7-8b9c-0d1e-2f3a-4b5c6d7e8f90"/>
+				<reportElement x="20" y="96" width="516" height="30" uuid="d4e5f6a7-8b9c-0d1e-2f3a-4b5c6d7e8f90"/>
 				<textElement textAlignment="Justified">
 					<font fontName="Arial" size="10"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{indicaciones} == null || $F{indicaciones}.trim().isEmpty() ? "No especificado" : $F{indicaciones}]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement x="20" y="120" width="100" height="15" uuid="e5f6a7b8-9c0d-1e2f-3a4b-5c6d7e8f90a1"/>
+				<reportElement x="20" y="161" width="100" height="15" uuid="e5f6a7b8-9c0d-1e2f-3a4b-5c6d7e8f90a1"/>
 				<textElement>
 					<font fontName="Arial" size="10" isBold="true"/>
 				</textElement>
 				<text><![CDATA[Observaciones:]]></text>
 			</staticText>
 			<textField textAdjust="StretchHeight">
-				<reportElement x="20" y="137" width="516" height="30" uuid="f6a7b8c9-0d1e-2f3a-4b5c-6d7e8f90a1b2"/>
+				<reportElement x="20" y="178" width="516" height="30" uuid="f6a7b8c9-0d1e-2f3a-4b5c-6d7e8f90a1b2"/>
 				<textElement textAlignment="Justified">
 					<font fontName="Arial" size="10"/>
 				</textElement>

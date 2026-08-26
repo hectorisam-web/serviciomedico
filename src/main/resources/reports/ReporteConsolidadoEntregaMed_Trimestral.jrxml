@@ -1,0 +1,392 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.21.5.final using JasperReports Library version 6.21.5-74d586df47b25dbd05bd0957999819196e59934a  -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="ControlDiario" pageWidth="842" pageHeight="595" orientation="Landscape" whenNoDataType="AllSectionsNoDetail" columnWidth="802" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="cd3df208-1f01-461e-9efe-3ee6c21a9dcb">
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="Intranet"/>
+	<parameter name="LOGO_PATH" class="java.lang.Object"/>
+	<parameter name="REPORT_DATE" class="java.sql.Date"/>
+	<parameter name="TRIMESTRE" class="java.lang.String"/>
+	<parameter name="ANO_FILTRO" class="java.lang.String"/>
+	<queryString>
+		<![CDATA[SELECT 
+    m.descripcion AS presentacion,
+    med.descripcionmedicamento AS descripcion_tableta,
+    SUM(CASE WHEN EXTRACT(WEEK FROM cd.fecha_control) = CASE WHEN $P{TRIMESTRE}::integer = 1 THEN 1 WHEN $P{TRIMESTRE}::integer = 2 THEN 14 WHEN $P{TRIMESTRE}::integer = 3 THEN 27 WHEN $P{TRIMESTRE}::integer = 4 THEN 40 END THEN cdm.cantidad ELSE 0 END) AS sem_1,
+    SUM(CASE WHEN EXTRACT(WEEK FROM cd.fecha_control) = CASE WHEN $P{TRIMESTRE}::integer = 1 THEN 2 WHEN $P{TRIMESTRE}::integer = 2 THEN 15 WHEN $P{TRIMESTRE}::integer = 3 THEN 28 WHEN $P{TRIMESTRE}::integer = 4 THEN 41 END THEN cdm.cantidad ELSE 0 END) AS sem_2,
+    SUM(CASE WHEN EXTRACT(WEEK FROM cd.fecha_control) = CASE WHEN $P{TRIMESTRE}::integer = 1 THEN 3 WHEN $P{TRIMESTRE}::integer = 2 THEN 16 WHEN $P{TRIMESTRE}::integer = 3 THEN 29 WHEN $P{TRIMESTRE}::integer = 4 THEN 42 END THEN cdm.cantidad ELSE 0 END) AS sem_3,
+    SUM(CASE WHEN EXTRACT(WEEK FROM cd.fecha_control) = CASE WHEN $P{TRIMESTRE}::integer = 1 THEN 4 WHEN $P{TRIMESTRE}::integer = 2 THEN 17 WHEN $P{TRIMESTRE}::integer = 3 THEN 30 WHEN $P{TRIMESTRE}::integer = 4 THEN 43 END THEN cdm.cantidad ELSE 0 END) AS sem_4,
+    SUM(CASE WHEN EXTRACT(WEEK FROM cd.fecha_control) = CASE WHEN $P{TRIMESTRE}::integer = 1 THEN 5 WHEN $P{TRIMESTRE}::integer = 2 THEN 18 WHEN $P{TRIMESTRE}::integer = 3 THEN 31 WHEN $P{TRIMESTRE}::integer = 4 THEN 44 END THEN cdm.cantidad ELSE 0 END) AS sem_5,
+    SUM(CASE WHEN EXTRACT(WEEK FROM cd.fecha_control) = CASE WHEN $P{TRIMESTRE}::integer = 1 THEN 6 WHEN $P{TRIMESTRE}::integer = 2 THEN 19 WHEN $P{TRIMESTRE}::integer = 3 THEN 32 WHEN $P{TRIMESTRE}::integer = 4 THEN 45 END THEN cdm.cantidad ELSE 0 END) AS sem_6,
+    SUM(CASE WHEN EXTRACT(WEEK FROM cd.fecha_control) = CASE WHEN $P{TRIMESTRE}::integer = 1 THEN 7 WHEN $P{TRIMESTRE}::integer = 2 THEN 20 WHEN $P{TRIMESTRE}::integer = 3 THEN 33 WHEN $P{TRIMESTRE}::integer = 4 THEN 46 END THEN cdm.cantidad ELSE 0 END) AS sem_7,
+    SUM(CASE WHEN EXTRACT(WEEK FROM cd.fecha_control) = CASE WHEN $P{TRIMESTRE}::integer = 1 THEN 8 WHEN $P{TRIMESTRE}::integer = 2 THEN 21 WHEN $P{TRIMESTRE}::integer = 3 THEN 34 WHEN $P{TRIMESTRE}::integer = 4 THEN 47 END THEN cdm.cantidad ELSE 0 END) AS sem_8,
+    SUM(CASE WHEN EXTRACT(WEEK FROM cd.fecha_control) = CASE WHEN $P{TRIMESTRE}::integer = 1 THEN 9 WHEN $P{TRIMESTRE}::integer = 2 THEN 22 WHEN $P{TRIMESTRE}::integer = 3 THEN 35 WHEN $P{TRIMESTRE}::integer = 4 THEN 48 END THEN cdm.cantidad ELSE 0 END) AS sem_9,
+    SUM(CASE WHEN EXTRACT(WEEK FROM cd.fecha_control) = CASE WHEN $P{TRIMESTRE}::integer = 1 THEN 10 WHEN $P{TRIMESTRE}::integer = 2 THEN 23 WHEN $P{TRIMESTRE}::integer = 3 THEN 36 WHEN $P{TRIMESTRE}::integer = 4 THEN 49 END THEN cdm.cantidad ELSE 0 END) AS sem_10,
+    SUM(CASE WHEN EXTRACT(WEEK FROM cd.fecha_control) = CASE WHEN $P{TRIMESTRE}::integer = 1 THEN 11 WHEN $P{TRIMESTRE}::integer = 2 THEN 24 WHEN $P{TRIMESTRE}::integer = 3 THEN 37 WHEN $P{TRIMESTRE}::integer = 4 THEN 50 END THEN cdm.cantidad ELSE 0 END) AS sem_11,
+    SUM(CASE WHEN EXTRACT(WEEK FROM cd.fecha_control) = CASE WHEN $P{TRIMESTRE}::integer = 1 THEN 12 WHEN $P{TRIMESTRE}::integer = 2 THEN 25 WHEN $P{TRIMESTRE}::integer = 3 THEN 38 WHEN $P{TRIMESTRE}::integer = 4 THEN 51 END THEN cdm.cantidad ELSE 0 END) AS sem_12,
+    SUM(CASE WHEN EXTRACT(WEEK FROM cd.fecha_control) = CASE WHEN $P{TRIMESTRE}::integer = 1 THEN 13 WHEN $P{TRIMESTRE}::integer = 2 THEN 26 WHEN $P{TRIMESTRE}::integer = 3 THEN 39 WHEN $P{TRIMESTRE}::integer = 4 THEN 52 END THEN cdm.cantidad ELSE 0 END) AS sem_13,
+    SUM(cdm.cantidad) AS total_periodo
+FROM 
+    control_diario_medicamento cdm
+JOIN 
+    control_diario cd ON cdm.uuid_control::text = cd.uuid_control::text
+JOIN 
+    medicamentos med ON cdm.uuid_medicamento::text = med.uuid_medicamento::text
+JOIN 
+    maestro m ON med.uuid_presentacion::text = m.uuid::text
+WHERE 
+    EXTRACT(YEAR FROM cd.fecha_control)::integer = $P{ANO_FILTRO}::integer
+    AND cd.fecha_control >= 
+        CASE 
+            WHEN $P{TRIMESTRE}::integer = 1 THEN make_date($P{ANO_FILTRO}::integer, 1, 1)
+            WHEN $P{TRIMESTRE}::integer = 2 THEN make_date($P{ANO_FILTRO}::integer, 4, 1)
+            WHEN $P{TRIMESTRE}::integer = 3 THEN make_date($P{ANO_FILTRO}::integer, 7, 1)
+            WHEN $P{TRIMESTRE}::integer = 4 THEN make_date($P{ANO_FILTRO}::integer, 10, 1)
+        END
+    AND cd.fecha_control <= 
+        CASE 
+            WHEN $P{TRIMESTRE}::integer = 1 THEN make_date($P{ANO_FILTRO}::integer, 3, 31)
+            WHEN $P{TRIMESTRE}::integer = 2 THEN make_date($P{ANO_FILTRO}::integer, 6, 30)
+            WHEN $P{TRIMESTRE}::integer = 3 THEN make_date($P{ANO_FILTRO}::integer, 9, 30)
+            WHEN $P{TRIMESTRE}::integer = 4 THEN make_date($P{ANO_FILTRO}::integer, 12, 31)
+        END
+    AND EXTRACT(ISODOW FROM cd.fecha_control) BETWEEN 1 AND 5
+GROUP BY 
+    m.descripcion, 
+    med.descripcionmedicamento
+ORDER BY 
+    m.descripcion ASC, 
+    med.descripcionmedicamento ASC]]>
+	</queryString>
+	<field name="presentacion" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="presentacion"/>
+		<property name="com.jaspersoft.studio.field.label" value="presentacion"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="maestro"/>
+	</field>
+	<field name="descripcion_tableta" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="descripcion_tableta"/>
+		<property name="com.jaspersoft.studio.field.label" value="descripcion_tableta"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="medicamentos"/>
+	</field>
+	<field name="sem_1" class="java.lang.Long">
+		<property name="com.jaspersoft.studio.field.name" value="sem_1"/>
+		<property name="com.jaspersoft.studio.field.label" value="sem_1"/>
+	</field>
+	<field name="sem_2" class="java.lang.Long">
+		<property name="com.jaspersoft.studio.field.name" value="sem_2"/>
+		<property name="com.jaspersoft.studio.field.label" value="sem_2"/>
+	</field>
+	<field name="sem_3" class="java.lang.Long">
+		<property name="com.jaspersoft.studio.field.name" value="sem_3"/>
+		<property name="com.jaspersoft.studio.field.label" value="sem_3"/>
+	</field>
+	<field name="sem_4" class="java.lang.Long">
+		<property name="com.jaspersoft.studio.field.name" value="sem_4"/>
+		<property name="com.jaspersoft.studio.field.label" value="sem_4"/>
+	</field>
+	<field name="sem_5" class="java.lang.Long">
+		<property name="com.jaspersoft.studio.field.name" value="sem_5"/>
+		<property name="com.jaspersoft.studio.field.label" value="sem_5"/>
+	</field>
+	<field name="sem_6" class="java.lang.Long">
+		<property name="com.jaspersoft.studio.field.name" value="sem_6"/>
+		<property name="com.jaspersoft.studio.field.label" value="sem_6"/>
+	</field>
+	<field name="sem_7" class="java.lang.Long">
+		<property name="com.jaspersoft.studio.field.name" value="sem_7"/>
+		<property name="com.jaspersoft.studio.field.label" value="sem_7"/>
+	</field>
+	<field name="sem_8" class="java.lang.Long">
+		<property name="com.jaspersoft.studio.field.name" value="sem_8"/>
+		<property name="com.jaspersoft.studio.field.label" value="sem_8"/>
+	</field>
+	<field name="sem_9" class="java.lang.Long">
+		<property name="com.jaspersoft.studio.field.name" value="sem_9"/>
+		<property name="com.jaspersoft.studio.field.label" value="sem_9"/>
+	</field>
+	<field name="sem_10" class="java.lang.Long">
+		<property name="com.jaspersoft.studio.field.name" value="sem_10"/>
+		<property name="com.jaspersoft.studio.field.label" value="sem_10"/>
+	</field>
+	<field name="sem_11" class="java.lang.Long">
+		<property name="com.jaspersoft.studio.field.name" value="sem_11"/>
+		<property name="com.jaspersoft.studio.field.label" value="sem_11"/>
+	</field>
+	<field name="sem_12" class="java.lang.Long">
+		<property name="com.jaspersoft.studio.field.name" value="sem_12"/>
+		<property name="com.jaspersoft.studio.field.label" value="sem_12"/>
+	</field>
+	<field name="sem_13" class="java.lang.Long">
+		<property name="com.jaspersoft.studio.field.name" value="sem_13"/>
+		<property name="com.jaspersoft.studio.field.label" value="sem_13"/>
+	</field>
+	<field name="total_periodo" class="java.lang.Long">
+		<property name="com.jaspersoft.studio.field.name" value="total_periodo"/>
+		<property name="com.jaspersoft.studio.field.label" value="total_periodo"/>
+	</field>
+	<group name="GroupPresentacion">
+		<groupExpression><![CDATA[$F{presentacion}]]></groupExpression>
+		<groupHeader>
+			<band height="22">
+				<textField>
+					<reportElement x="0" y="2" width="180" height="18" uuid="81b2a2f8-26a4-4834-9c29-c59a45113d11"/>
+					<textElement verticalAlignment="Middle">
+						<font size="9" isBold="true"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{presentacion}]]></textFieldExpression>
+				</textField>
+			</band>
+		</groupHeader>
+		<groupFooter>
+			<band height="10"/>
+		</groupFooter>
+	</group>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<columnHeader>
+		<band height="109">
+			<image>
+				<reportElement x="0" y="5" width="120" height="60" uuid="4d282940-2874-4d5d-889f-4a1ae3763d95"/>
+				<imageExpression><![CDATA[$P{LOGO_PATH} != null ? $P{LOGO_PATH} : "X:/ServicioMedico/serviciomedico/src/main/resources/icons/Logo_Turismo.png"]]></imageExpression>
+			</image>
+			<staticText>
+				<reportElement mode="Opaque" x="136" y="37" width="530" height="20" uuid="b8cf7e84-dfc5-43c0-a90a-c91836c639ec"/>
+				<textElement textAlignment="Center">
+					<font size="14" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Reporte Entrega de Medicinas - Trimestre]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="218" y="60" width="366" height="20" uuid="4344431b-7de1-43e1-8b5b-447a72bc2f1e">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Center">
+					<font size="13" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Trimestre: " + $P{TRIMESTRE} + " - Año: " + $P{ANO_FILTRO}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="14" y="87" width="158" height="18" uuid="6a699803-c03b-44c3-87e4-a32e8afff85f"/>
+				<textElement verticalAlignment="Middle">
+					<font size="9" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Descripción Medicina"]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="176" y="87" width="45" height="18" uuid="82619666-ac9b-4dc6-80af-d82d2a7b4457"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA["S1"]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="223" y="87" width="45" height="18" uuid="56d8a5d4-cd88-4297-8acb-28b0937b97a8"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA["S2"]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="270" y="87" width="45" height="18" uuid="8d03ae35-5735-4fe3-8759-8409b585b94f"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA["S3"]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="317" y="87" width="45" height="18" uuid="8749f383-77b9-4c65-9ef2-2ea21cb5cc2c"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA["S4"]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="364" y="87" width="45" height="18" uuid="54e12cfe-4bfc-47cb-b227-fe2cc672b1ec"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA["S5"]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="411" y="87" width="45" height="18" uuid="75830c3f-ac1c-4386-9211-d8a6c70e8eda"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA["S6"]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="458" y="87" width="45" height="18" uuid="9aabbe94-dd11-40dd-b1b7-4f83790a86e3"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA["S7"]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="505" y="87" width="45" height="18" uuid="725486df-f5fd-445c-adf7-4dbbdb66cade"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA["S8"]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="552" y="87" width="45" height="18" uuid="e739fd9f-0062-4602-893a-8f4f5bba9da4"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA["S9"]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="599" y="87" width="45" height="18" uuid="58e1c0ca-3697-4322-8b85-225f07ba704f"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA["S10"]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="646" y="87" width="45" height="18" uuid="cbe89b27-dc69-4d9a-ade0-6eb380640efa"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA["S11"]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="693" y="87" width="45" height="18" uuid="2d5a0f47-4967-4351-a7ba-79101bf9ca06"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA["S12"]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="740" y="87" width="30" height="18" uuid="3d5a0f47-4967-4351-a7ba-79101bf9ca07"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA["S13"]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="772" y="87" width="30" height="18" uuid="cf15571d-cbeb-4748-8900-57021564596c"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Total"]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement x="0" y="107" width="802" height="1" uuid="40ffdff7-ec5c-483f-86c3-3da7dd02b461"/>
+			</line>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="18" splitType="Prevent">
+			<textField>
+				<reportElement x="0" y="0" width="174" height="18" uuid="1161b0db-244a-4acc-ad29-3aa51586de11"/>
+				<textElement verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{descripcion_tableta}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0" isBlankWhenNull="true">
+				<reportElement x="176" y="0" width="45" height="18" uuid="27d51b37-f2a6-469a-8238-8e18f1454522"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{sem_1}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0" isBlankWhenNull="true">
+				<reportElement x="223" y="0" width="45" height="18" uuid="37e8ec15-7295-46c7-b974-a92465d0bb33"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{sem_2}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0" isBlankWhenNull="true">
+				<reportElement x="270" y="0" width="45" height="18" uuid="40fdb890-f1a3-4b17-b605-6a97ed9e4144"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{sem_3}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0" isBlankWhenNull="true">
+				<reportElement x="317" y="0" width="45" height="18" uuid="53f69882-9239-467c-a0b0-843d4ad5fa55"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{sem_4}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0" isBlankWhenNull="true">
+				<reportElement x="364" y="0" width="45" height="18" uuid="6c4f009d-6042-4eae-8eee-a1899c2e7af6"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{sem_5}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0" isBlankWhenNull="true">
+				<reportElement x="411" y="0" width="45" height="18" uuid="77d95f50-c325-4614-a03d-3bbc087af977"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{sem_6}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0" isBlankWhenNull="true">
+				<reportElement x="458" y="0" width="45" height="18" uuid="83a9fbef-dbcd-474b-8726-1ceec486e688"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{sem_7}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0" isBlankWhenNull="true">
+				<reportElement x="505" y="0" width="45" height="18" uuid="9abc4f0f-fc5d-4eb4-9d0c-2e70f31c9999"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{sem_8}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0" isBlankWhenNull="true">
+				<reportElement x="552" y="0" width="45" height="18" uuid="a7ac927c-bebb-401b-8617-45ebb4cd57aa"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{sem_9}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0" isBlankWhenNull="true">
+				<reportElement x="599" y="0" width="45" height="18" uuid="be2798f4-5001-4c07-8722-4daa8b6358bb"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{sem_10}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0" isBlankWhenNull="true">
+				<reportElement x="646" y="0" width="45" height="18" uuid="c74a856b-51da-424b-a3f4-3150a4ca6e1c"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{sem_11}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0" isBlankWhenNull="true">
+				<reportElement x="693" y="0" width="45" height="18" uuid="dca6632c-84b4-4cb7-a7ae-21978ecb04dd"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{sem_12}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0" isBlankWhenNull="true">
+				<reportElement x="740" y="0" width="30" height="18" uuid="dca6632c-84b4-4cb7-a7ae-21978ecb04de"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{sem_13}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0" isBlankWhenNull="true">
+				<reportElement x="772" y="0" width="30" height="18" uuid="e0a6632c-84b4-4cb7-a7ae-21978ecb04ee"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{total_periodo}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<summary>
+		<band height="30" splitType="Stretch">
+			<property name="com.jaspersoft.studio.unit.height" value="px"/>
+		</band>
+	</summary>
+</jasperReport>

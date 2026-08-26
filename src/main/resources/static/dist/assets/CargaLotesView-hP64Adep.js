@@ -1,0 +1,1 @@
+import{d as a,e as s,f as e,c as r}from"./vendor-BzqS2YzJ.js";const o={class:"maestro-wrapper"},l=a({__name:"CargaLotesView",setup:a=>(a,l)=>(r(),s("div",o,[...l[0]||(l[0]=[e("h1",null,"Carga de Lotes",-1),e("p",null,"En desarrollo...",-1)])]))});export{l as default};
