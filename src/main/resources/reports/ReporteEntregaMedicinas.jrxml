@@ -21,7 +21,7 @@
 	<style name="Bold" fontSize="13"/>
 	<parameter name="LOGO_PATH" class="java.io.InputStream"/>
 	<parameter name="REPORT_DATE" class="java.sql.Date"/>
-	<parameter name="uuid_control" class="java.util.UUID"/>
+	<parameter name="uuid_control" class="java.lang.String"/>
 	<queryString>
 		<![CDATA[SELECT 
     cdm.uuid_control_med,
@@ -174,9 +174,9 @@ ORDER BY cd.fecha_control DESC, cd.hora_control DESC]]>
 	<title>
 		<band height="75">
 			<property name="com.jaspersoft.studio.unit.height" value="px"/>
-			<image onErrorType="Blank">
-				<reportElement x="10" y="7" width="140" height="60" uuid="a3265f95-4735-4389-a284-d2cd4e5863de"/>
-				<imageExpression><![CDATA[$P{LOGO_PATH}]]></imageExpression>
+			<image>
+				<reportElement x="5" y="5" width="120" height="60" uuid="4d282940-2874-4d5d-889f-4a1ae3763d95"/>
+				<imageExpression><![CDATA[$P{LOGO_PATH} != null ? $P{LOGO_PATH} : "X:/ServicioMedico/serviciomedico/src/main/resources/icons/Logo_Turismo.png"]]></imageExpression>
 			</image>
 			<textField>
 				<reportElement x="600" y="16" width="200" height="15" uuid="f0486eea-e307-4129-9aea-81e46beee51a"/>

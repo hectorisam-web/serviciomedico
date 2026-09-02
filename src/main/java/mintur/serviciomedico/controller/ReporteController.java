@@ -64,30 +64,76 @@ public class ReporteController {
                 }
             }
         }
-        
+            
         // --- 1.5. CÁLCULO DINÁMICO DE RANGOS DE SEMANAS (LUNES A VIERNES) ---
         if (allParams.containsKey("TRIMESTRE") && allParams.containsKey("ANO_FILTRO")) {
             try {
                 int anio = Integer.parseInt(allParams.get("ANO_FILTRO"));
                 int trimestre = Integer.parseInt(allParams.get("TRIMESTRE"));
                 
-                int mesInicio = (trimestre - 1) * 3 + 1;
-                java.time.LocalDate fechaActual = java.time.LocalDate.of(anio, mesInicio, 1);
+                // Definir la semana de inicio exacta según el trimestre (igual que en tu SQL)
+                int semanaInicio = switch (trimestre) {
+                    case 1 -> 1;
+                    case 2 -> 14;
+                    case 3 -> 27;
+                    case 4 -> 40;
+                    default -> 1;
+                };
+                
+                java.time.temporal.WeekFields weekFields = java.time.temporal.WeekFields.of(java.util.Locale.getDefault());
                 java.time.format.DateTimeFormatter formatter = java.time.format.DateTimeFormatter.ofPattern("dd/MM");
 
                 for (int i = 1; i <= 13; i++) {
-                    java.time.LocalDate lunes = fechaActual.with(java.time.temporal.TemporalAdjusters.previousOrSame(java.time.DayOfWeek.MONDAY));
-                    java.time.LocalDate viernes = lunes.plusDays(4);
+                    int numeroSemana = semanaInicio + (i - 1);
+                    
+                    // Obtiene siempre el Lunes de esa semana específica del año
+                    java.time.LocalDate lunes = java.time.LocalDate.of(anio, 1, 1)
+                            .with(weekFields.weekOfYear(), numeroSemana)
+                            .with(weekFields.dayOfWeek(), 1); // 1 = Lunes
+                            
+                    java.time.LocalDate viernes = lunes.plusDays(4); // Viernes (Día hábil 5)
 
                     String rangoFecha = lunes.format(formatter) + "-" + viernes.format(formatter);
                     jasperParams.put("LBL_SEM_" + i, rangoFecha);
-
-                    fechaActual = fechaActual.plusWeeks(1);
                 }
             } catch (Exception e) {
                 logger.warning("No se pudieron calcular los rangos de semana dinámicos: " + e.getMessage());
             }
-        }               
+        }
+        
+        // 1.6 --- CÁLCULO DINÁMICO DE LAS 5 SEMANAS LABORALES DEL MES ---
+        if (allParams.containsKey("fechaInicio")) {
+            try {
+                java.time.LocalDate fechaBase = java.time.LocalDate.parse(allParams.get("fechaInicio"));
+                java.time.format.DateTimeFormatter formatter = java.time.format.DateTimeFormatter.ofPattern("dd/MM");
+
+                // Encontramos el primer día del mes y avanzamos al primer lunes (o usamos el inicio del mes)
+                java.time.LocalDate cursor = fechaBase.withDayOfMonth(1);
+
+                for (int semana = 1; semana <= 5; semana++) {
+                    // Buscamos el lunes de la semana actual del cursor
+                    java.time.LocalDate lunes = cursor.with(java.time.temporal.TemporalAdjusters.nextOrSame(java.time.DayOfWeek.MONDAY));
+                    if (lunes.getMonthValue() != fechaBase.getMonthValue() && semana == 1) {
+                        lunes = cursor.with(java.time.temporal.TemporalAdjusters.previousOrSame(java.time.DayOfWeek.MONDAY));
+                    }
+                    java.time.LocalDate viernes = lunes.plusDays(4);
+
+                    // Si el lunes ya pertenece al mes siguiente, dejamos el parámetro vacío o null
+                    if (lunes.getMonthValue() != fechaBase.getMonthValue()) {
+                        jasperParams.put("p_sem" + semana, "");
+                    } else {
+                        String rango = lunes.format(formatter) + " al " + viernes.format(formatter);
+                        jasperParams.put("p_sem" + semana, rango);
+                    }
+
+                    // Movemos el cursor a la siguiente semana
+                    cursor = viernes.plusDays(3); // Salta al siguiente lunes aprox
+                }
+            } catch (Exception e) {
+                logger.warning("No se pudieron calcular los rangos semanales del mes: " + e.getMessage());
+            }
+        }
+        
         // --- 2. PROCESAMIENTO DE MÉDICO ---
         String uuidMedico = allParams.get("uuidMedico");
         String nombreMedico = "General / Todos";

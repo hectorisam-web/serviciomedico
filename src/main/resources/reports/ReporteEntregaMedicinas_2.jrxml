@@ -1,0 +1,248 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.21.5.final using JasperReports Library version 6.21.5-74d586df47b25dbd05bd0957999819196e59934a  -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="ControlMensualSemanasHorizontal" pageWidth="842" pageHeight="595" orientation="Landscape" whenNoDataType="AllSectionsNoDetail" columnWidth="802" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="cd3df208-1f01-461e-9efe-3ee6c21a9dcb">
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="Intranet"/>
+	<parameter name="LOGO_PATH" class="java.lang.Object"/>
+	<parameter name="fechaInicio" class="java.sql.Date"/>
+	<parameter name="fechaFin" class="java.sql.Date"/>
+	<parameter name="REPORT_DATE" class="java.sql.Date"/>
+	<parameter name="ANO_FILTRO" class="java.lang.String"/>
+	<parameter name="p_sem1" class="java.lang.String"/>
+	<parameter name="p_sem2" class="java.lang.String"/>
+	<parameter name="p_sem3" class="java.lang.String"/>
+	<parameter name="p_sem4" class="java.lang.String"/>
+	<parameter name="p_sem5" class="java.lang.String"/>
+	<queryString>
+		<![CDATA[WITH dias_laborales AS (
+    SELECT 
+        cd.uuid_control,
+        cd.fecha_control,
+        -- Asigna el número de semana del mes basándose en el Lunes de cada semana calendario
+        DENSE_RANK() OVER (
+            PARTITION BY DATE_TRUNC('month', cd.fecha_control) 
+            ORDER BY DATE_TRUNC('week', cd.fecha_control)
+        ) AS semana_laboral
+    FROM 
+        control_diario cd
+    WHERE 
+        EXTRACT(ISODOW FROM cd.fecha_control) BETWEEN 1 AND 5 -- Solo Lunes a Viernes
+        AND cd.fecha_control >= $P{fechaInicio}::date
+        AND cd.fecha_control <= $P{fechaFin}::date
+)
+SELECT 
+    m.descripcion AS presentacion,
+    med.descripcionmedicamento AS descripcion_tableta,
+    SUM(CASE WHEN dl.semana_laboral = 1 THEN cdm.cantidad ELSE 0 END) AS semana_1,
+    SUM(CASE WHEN dl.semana_laboral = 2 THEN cdm.cantidad ELSE 0 END) AS semana_2,
+    SUM(CASE WHEN dl.semana_laboral = 3 THEN cdm.cantidad ELSE 0 END) AS semana_3,
+    SUM(CASE WHEN dl.semana_laboral = 4 THEN cdm.cantidad ELSE 0 END) AS semana_4,
+    SUM(CASE WHEN dl.semana_laboral >= 5 THEN cdm.cantidad ELSE 0 END) AS semana_5,
+    SUM(cdm.cantidad) AS total_periodo
+FROM 
+    control_diario_medicamento cdm
+JOIN 
+    dias_laborales dl ON cdm.uuid_control::text = dl.uuid_control::text
+JOIN 
+    medicamentos med ON cdm.uuid_medicamento::text = med.uuid_medicamento::text
+JOIN 
+    maestro m ON med.uuid_presentacion::text = m.uuid::text
+GROUP BY 
+    m.descripcion, 
+    med.descripcionmedicamento
+ORDER BY 
+    m.descripcion ASC, 
+    med.descripcionmedicamento ASC;]]>
+	</queryString>
+	<field name="presentacion" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="presentacion"/>
+		<property name="com.jaspersoft.studio.field.label" value="presentacion"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="maestro"/>
+	</field>
+	<field name="descripcion_tableta" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="descripcion_tableta"/>
+		<property name="com.jaspersoft.studio.field.label" value="descripcion_tableta"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="medicamentos"/>
+	</field>
+	<field name="semana_1" class="java.lang.Long">
+		<property name="com.jaspersoft.studio.field.name" value="semana_1"/>
+		<property name="com.jaspersoft.studio.field.label" value="semana_1"/>
+	</field>
+	<field name="semana_2" class="java.lang.Long">
+		<property name="com.jaspersoft.studio.field.name" value="semana_2"/>
+		<property name="com.jaspersoft.studio.field.label" value="semana_2"/>
+	</field>
+	<field name="semana_3" class="java.lang.Long">
+		<property name="com.jaspersoft.studio.field.name" value="semana_3"/>
+		<property name="com.jaspersoft.studio.field.label" value="semana_3"/>
+	</field>
+	<field name="semana_4" class="java.lang.Long">
+		<property name="com.jaspersoft.studio.field.name" value="semana_4"/>
+		<property name="com.jaspersoft.studio.field.label" value="semana_4"/>
+	</field>
+	<field name="semana_5" class="java.lang.Long">
+		<property name="com.jaspersoft.studio.field.name" value="semana_5"/>
+		<property name="com.jaspersoft.studio.field.label" value="semana_5"/>
+	</field>
+	<field name="total_periodo" class="java.lang.Long">
+		<property name="com.jaspersoft.studio.field.name" value="total_periodo"/>
+		<property name="com.jaspersoft.studio.field.label" value="total_periodo"/>
+	</field>
+	<group name="GroupPresentacion">
+		<groupExpression><![CDATA[$F{presentacion}]]></groupExpression>
+		<groupHeader>
+			<band height="22">
+				<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				<textField>
+					<reportElement x="0" y="2" width="300" height="18" uuid="efd27119-3e6f-4f32-93ae-5bbb1bc7edf8"/>
+					<textElement verticalAlignment="Middle">
+						<font size="11" isBold="true"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{presentacion}]]></textFieldExpression>
+				</textField>
+			</band>
+		</groupHeader>
+	</group>
+	<title>
+		<band height="5">
+			<property name="com.jaspersoft.studio.unit.height" value="px"/>
+		</band>
+	</title>
+	<pageHeader>
+		<band height="95">
+			<textField>
+				<reportElement x="201" y="53" width="400" height="25" uuid="fb662883-2563-41a5-ac4f-aaed2e1b6ed5">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Center">
+					<font size="12" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Consolidado Mensual - Periodo: " + new java.text.SimpleDateFormat("dd/MM/yyyy").format($P{fechaInicio}) + " al " + new java.text.SimpleDateFormat("dd/MM/yyyy").format($P{fechaFin})]]></textFieldExpression>
+			</textField>
+			<image>
+				<reportElement x="5" y="5" width="100" height="50" uuid="32701bfc-f5f4-4ff5-9e16-3495a9f98de1"/>
+				<imageExpression><![CDATA[$P{LOGO_PATH} != null ? $P{LOGO_PATH} : "X:/ServicioMedico/serviciomedico/src/main/resources/icons/Logo_Turismo.png"]]></imageExpression>
+			</image>
+			<staticText>
+				<reportElement mode="Opaque" x="236" y="30" width="330" height="20" uuid="43255c8a-4105-463c-8206-9922a1f2b1cc"/>
+				<textElement textAlignment="Center">
+					<font size="14" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Entrega de Medicinas Mensual]]></text>
+			</staticText>
+		</band>
+	</pageHeader>
+	<columnHeader>
+		<band height="25">
+			<property name="com.jaspersoft.studio.unit.height" value="px"/>
+			<staticText>
+				<reportElement x="0" y="2" width="250" height="18" uuid="a6a82a5f-5798-45c4-83f0-8b3edaeffac4"/>
+				<textElement verticalAlignment="Middle">
+					<font size="10" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Descripción Medicina]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="672" y="0" width="80" height="18" uuid="2ffef8fb-3374-4bd1-b0ae-25331a342e4f"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="10" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Total Mes]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="276" y="3" width="60" height="15" uuid="647facb6-6793-4cc7-bd7c-0c7b73c5f2db">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<textFieldExpression><![CDATA[$P{p_sem1}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="347" y="2" width="60" height="15" uuid="e8f2f018-e7e2-4661-b3e1-4fb6c069b39a">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<textFieldExpression><![CDATA[$P{p_sem2}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="425" y="2" width="60" height="15" uuid="2c9e6ac7-1f3f-41f6-acad-8e27c0dd42a5">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<textFieldExpression><![CDATA[$P{p_sem3}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="510" y="2" width="60" height="15" uuid="07b06eb8-e815-47bc-8fed-5203940594a3">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<textFieldExpression><![CDATA[$P{p_sem4}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="600" y="3" width="60" height="15" uuid="4eb0c681-0097-4f20-925c-4bd81f61aadb">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<textFieldExpression><![CDATA[$P{p_sem5}]]></textFieldExpression>
+			</textField>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="20">
+			<property name="com.jaspersoft.studio.unit.height" value="px"/>
+			<textField>
+				<reportElement x="15" y="1" width="235" height="18" uuid="c89f3bbc-1e90-4e74-80c4-676d3be84ba7"/>
+				<textElement verticalAlignment="Middle">
+					<font size="9"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{descripcion_tableta}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="270" y="1" width="70" height="18" uuid="f7aec030-0d85-4176-88f2-a73813fe7503"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="9"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{semana_1}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="350" y="1" width="70" height="18" uuid="1a7ee9d9-e858-47d1-8393-4b687ea784fe"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="9"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{semana_2}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="430" y="1" width="70" height="18" uuid="9cf6fe23-fcd3-431d-a3a4-bd347265d058"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="9"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{semana_3}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="510" y="1" width="70" height="18" uuid="1de6d506-2652-43d6-905c-c88dfaff0a23"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="9"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{semana_4}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="590" y="1" width="70" height="18" uuid="01ce2a5e-43c9-48d3-b69f-3e6aca4c3cb1"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="9"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{semana_5}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="670" y="1" width="80" height="18" uuid="3ffef8fb-3374-4bd1-b0ae-25331a342e50"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="9" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{total_periodo}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<summary>
+		<band height="40" splitType="Stretch">
+			<property name="com.jaspersoft.studio.unit.height" value="px"/>
+		</band>
+	</summary>
+</jasperReport>

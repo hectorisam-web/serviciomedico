@@ -4,26 +4,47 @@
 	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
 	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="Intranet"/>
 	<parameter name="LOGO_PATH" class="java.lang.Object"/>
-	<parameter name="REPORT_DATE" class="java.sql.Date"/>
-	<parameter name="TRIMESTRE" class="java.lang.String"/>
-	<parameter name="ANO_FILTRO" class="java.lang.String"/>
+	<parameter name="REPORT_DATE" class="java.sql.Date">
+		<defaultValueExpression><![CDATA["2026/09/31"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="TRIMESTRE" class="java.lang.String">
+		<defaultValueExpression><![CDATA["3"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="ANO_FILTRO" class="java.lang.String">
+		<defaultValueExpression><![CDATA["2026"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="LBL_SEM_1" class="java.lang.String">
+		<defaultValueExpression><![CDATA["01/07-05/07"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="LBL_SEM_2" class="java.lang.String"/>
+	<parameter name="LBL_SEM_3" class="java.lang.String"/>
+	<parameter name="LBL_SEM_4" class="java.lang.String"/>
+	<parameter name="LBL_SEM_5" class="java.lang.String"/>
+	<parameter name="LBL_SEM_6" class="java.lang.String"/>
+	<parameter name="LBL_SEM_7" class="java.lang.String"/>
+	<parameter name="LBL_SEM_8" class="java.lang.String"/>
+	<parameter name="LBL_SEM_9" class="java.lang.String"/>
+	<parameter name="LBL_SEM_10" class="java.lang.String"/>
+	<parameter name="LBL_SEM_11" class="java.lang.String"/>
+	<parameter name="LBL_SEM_12" class="java.lang.String"/>
+	<parameter name="LBL_SEM_13" class="java.lang.String"/>
 	<queryString>
 		<![CDATA[SELECT 
     m.descripcion AS presentacion,
     med.descripcionmedicamento AS descripcion_tableta,
-    SUM(CASE WHEN EXTRACT(WEEK FROM cd.fecha_control) = CASE WHEN $P{TRIMESTRE}::integer = 1 THEN 1 WHEN $P{TRIMESTRE}::integer = 2 THEN 14 WHEN $P{TRIMESTRE}::integer = 3 THEN 27 WHEN $P{TRIMESTRE}::integer = 4 THEN 40 END THEN cdm.cantidad ELSE 0 END) AS sem_1,
-    SUM(CASE WHEN EXTRACT(WEEK FROM cd.fecha_control) = CASE WHEN $P{TRIMESTRE}::integer = 1 THEN 2 WHEN $P{TRIMESTRE}::integer = 2 THEN 15 WHEN $P{TRIMESTRE}::integer = 3 THEN 28 WHEN $P{TRIMESTRE}::integer = 4 THEN 41 END THEN cdm.cantidad ELSE 0 END) AS sem_2,
-    SUM(CASE WHEN EXTRACT(WEEK FROM cd.fecha_control) = CASE WHEN $P{TRIMESTRE}::integer = 1 THEN 3 WHEN $P{TRIMESTRE}::integer = 2 THEN 16 WHEN $P{TRIMESTRE}::integer = 3 THEN 29 WHEN $P{TRIMESTRE}::integer = 4 THEN 42 END THEN cdm.cantidad ELSE 0 END) AS sem_3,
-    SUM(CASE WHEN EXTRACT(WEEK FROM cd.fecha_control) = CASE WHEN $P{TRIMESTRE}::integer = 1 THEN 4 WHEN $P{TRIMESTRE}::integer = 2 THEN 17 WHEN $P{TRIMESTRE}::integer = 3 THEN 30 WHEN $P{TRIMESTRE}::integer = 4 THEN 43 END THEN cdm.cantidad ELSE 0 END) AS sem_4,
-    SUM(CASE WHEN EXTRACT(WEEK FROM cd.fecha_control) = CASE WHEN $P{TRIMESTRE}::integer = 1 THEN 5 WHEN $P{TRIMESTRE}::integer = 2 THEN 18 WHEN $P{TRIMESTRE}::integer = 3 THEN 31 WHEN $P{TRIMESTRE}::integer = 4 THEN 44 END THEN cdm.cantidad ELSE 0 END) AS sem_5,
-    SUM(CASE WHEN EXTRACT(WEEK FROM cd.fecha_control) = CASE WHEN $P{TRIMESTRE}::integer = 1 THEN 6 WHEN $P{TRIMESTRE}::integer = 2 THEN 19 WHEN $P{TRIMESTRE}::integer = 3 THEN 32 WHEN $P{TRIMESTRE}::integer = 4 THEN 45 END THEN cdm.cantidad ELSE 0 END) AS sem_6,
-    SUM(CASE WHEN EXTRACT(WEEK FROM cd.fecha_control) = CASE WHEN $P{TRIMESTRE}::integer = 1 THEN 7 WHEN $P{TRIMESTRE}::integer = 2 THEN 20 WHEN $P{TRIMESTRE}::integer = 3 THEN 33 WHEN $P{TRIMESTRE}::integer = 4 THEN 46 END THEN cdm.cantidad ELSE 0 END) AS sem_7,
-    SUM(CASE WHEN EXTRACT(WEEK FROM cd.fecha_control) = CASE WHEN $P{TRIMESTRE}::integer = 1 THEN 8 WHEN $P{TRIMESTRE}::integer = 2 THEN 21 WHEN $P{TRIMESTRE}::integer = 3 THEN 34 WHEN $P{TRIMESTRE}::integer = 4 THEN 47 END THEN cdm.cantidad ELSE 0 END) AS sem_8,
-    SUM(CASE WHEN EXTRACT(WEEK FROM cd.fecha_control) = CASE WHEN $P{TRIMESTRE}::integer = 1 THEN 9 WHEN $P{TRIMESTRE}::integer = 2 THEN 22 WHEN $P{TRIMESTRE}::integer = 3 THEN 35 WHEN $P{TRIMESTRE}::integer = 4 THEN 48 END THEN cdm.cantidad ELSE 0 END) AS sem_9,
-    SUM(CASE WHEN EXTRACT(WEEK FROM cd.fecha_control) = CASE WHEN $P{TRIMESTRE}::integer = 1 THEN 10 WHEN $P{TRIMESTRE}::integer = 2 THEN 23 WHEN $P{TRIMESTRE}::integer = 3 THEN 36 WHEN $P{TRIMESTRE}::integer = 4 THEN 49 END THEN cdm.cantidad ELSE 0 END) AS sem_10,
-    SUM(CASE WHEN EXTRACT(WEEK FROM cd.fecha_control) = CASE WHEN $P{TRIMESTRE}::integer = 1 THEN 11 WHEN $P{TRIMESTRE}::integer = 2 THEN 24 WHEN $P{TRIMESTRE}::integer = 3 THEN 37 WHEN $P{TRIMESTRE}::integer = 4 THEN 50 END THEN cdm.cantidad ELSE 0 END) AS sem_11,
-    SUM(CASE WHEN EXTRACT(WEEK FROM cd.fecha_control) = CASE WHEN $P{TRIMESTRE}::integer = 1 THEN 12 WHEN $P{TRIMESTRE}::integer = 2 THEN 25 WHEN $P{TRIMESTRE}::integer = 3 THEN 38 WHEN $P{TRIMESTRE}::integer = 4 THEN 51 END THEN cdm.cantidad ELSE 0 END) AS sem_12,
-    SUM(CASE WHEN EXTRACT(WEEK FROM cd.fecha_control) = CASE WHEN $P{TRIMESTRE}::integer = 1 THEN 13 WHEN $P{TRIMESTRE}::integer = 2 THEN 26 WHEN $P{TRIMESTRE}::integer = 3 THEN 39 WHEN $P{TRIMESTRE}::integer = 4 THEN 52 END THEN cdm.cantidad ELSE 0 END) AS sem_13,
+    SUM(CASE WHEN (EXTRACT(WEEK FROM cd.fecha_control)::integer - (CASE WHEN $P{TRIMESTRE}::integer = 1 THEN 0 WHEN $P{TRIMESTRE}::integer = 2 THEN 13 WHEN $P{TRIMESTRE}::integer = 3 THEN 26 WHEN $P{TRIMESTRE}::integer = 4 THEN 39 END)) = 1 THEN cdm.cantidad ELSE 0 END) AS sem_1,
+    SUM(CASE WHEN (EXTRACT(WEEK FROM cd.fecha_control)::integer - (CASE WHEN $P{TRIMESTRE}::integer = 1 THEN 0 WHEN $P{TRIMESTRE}::integer = 2 THEN 13 WHEN $P{TRIMESTRE}::integer = 3 THEN 26 WHEN $P{TRIMESTRE}::integer = 4 THEN 39 END)) = 2 THEN cdm.cantidad ELSE 0 END) AS sem_2,
+    SUM(CASE WHEN (EXTRACT(WEEK FROM cd.fecha_control)::integer - (CASE WHEN $P{TRIMESTRE}::integer = 1 THEN 0 WHEN $P{TRIMESTRE}::integer = 2 THEN 13 WHEN $P{TRIMESTRE}::integer = 3 THEN 26 WHEN $P{TRIMESTRE}::integer = 4 THEN 39 END)) = 3 THEN cdm.cantidad ELSE 0 END) AS sem_3,
+    SUM(CASE WHEN (EXTRACT(WEEK FROM cd.fecha_control)::integer - (CASE WHEN $P{TRIMESTRE}::integer = 1 THEN 0 WHEN $P{TRIMESTRE}::integer = 2 THEN 13 WHEN $P{TRIMESTRE}::integer = 3 THEN 26 WHEN $P{TRIMESTRE}::integer = 4 THEN 39 END)) = 4 THEN cdm.cantidad ELSE 0 END) AS sem_4,
+    SUM(CASE WHEN (EXTRACT(WEEK FROM cd.fecha_control)::integer - (CASE WHEN $P{TRIMESTRE}::integer = 1 THEN 0 WHEN $P{TRIMESTRE}::integer = 2 THEN 13 WHEN $P{TRIMESTRE}::integer = 3 THEN 26 WHEN $P{TRIMESTRE}::integer = 4 THEN 39 END)) = 5 THEN cdm.cantidad ELSE 0 END) AS sem_5,
+    SUM(CASE WHEN (EXTRACT(WEEK FROM cd.fecha_control)::integer - (CASE WHEN $P{TRIMESTRE}::integer = 1 THEN 0 WHEN $P{TRIMESTRE}::integer = 2 THEN 13 WHEN $P{TRIMESTRE}::integer = 3 THEN 26 WHEN $P{TRIMESTRE}::integer = 4 THEN 39 END)) = 6 THEN cdm.cantidad ELSE 0 END) AS sem_6,
+    SUM(CASE WHEN (EXTRACT(WEEK FROM cd.fecha_control)::integer - (CASE WHEN $P{TRIMESTRE}::integer = 1 THEN 0 WHEN $P{TRIMESTRE}::integer = 2 THEN 13 WHEN $P{TRIMESTRE}::integer = 3 THEN 26 WHEN $P{TRIMESTRE}::integer = 4 THEN 39 END)) = 7 THEN cdm.cantidad ELSE 0 END) AS sem_7,
+    SUM(CASE WHEN (EXTRACT(WEEK FROM cd.fecha_control)::integer - (CASE WHEN $P{TRIMESTRE}::integer = 1 THEN 0 WHEN $P{TRIMESTRE}::integer = 2 THEN 13 WHEN $P{TRIMESTRE}::integer = 3 THEN 26 WHEN $P{TRIMESTRE}::integer = 4 THEN 39 END)) = 8 THEN cdm.cantidad ELSE 0 END) AS sem_8,
+    SUM(CASE WHEN (EXTRACT(WEEK FROM cd.fecha_control)::integer - (CASE WHEN $P{TRIMESTRE}::integer = 1 THEN 0 WHEN $P{TRIMESTRE}::integer = 2 THEN 13 WHEN $P{TRIMESTRE}::integer = 3 THEN 26 WHEN $P{TRIMESTRE}::integer = 4 THEN 39 END)) = 9 THEN cdm.cantidad ELSE 0 END) AS sem_9,
+    SUM(CASE WHEN (EXTRACT(WEEK FROM cd.fecha_control)::integer - (CASE WHEN $P{TRIMESTRE}::integer = 1 THEN 0 WHEN $P{TRIMESTRE}::integer = 2 THEN 13 WHEN $P{TRIMESTRE}::integer = 3 THEN 26 WHEN $P{TRIMESTRE}::integer = 4 THEN 39 END)) = 10 THEN cdm.cantidad ELSE 0 END) AS sem_10,
+    SUM(CASE WHEN (EXTRACT(WEEK FROM cd.fecha_control)::integer - (CASE WHEN $P{TRIMESTRE}::integer = 1 THEN 0 WHEN $P{TRIMESTRE}::integer = 2 THEN 13 WHEN $P{TRIMESTRE}::integer = 3 THEN 26 WHEN $P{TRIMESTRE}::integer = 4 THEN 39 END)) = 11 THEN cdm.cantidad ELSE 0 END) AS sem_11,
+    SUM(CASE WHEN (EXTRACT(WEEK FROM cd.fecha_control)::integer - (CASE WHEN $P{TRIMESTRE}::integer = 1 THEN 0 WHEN $P{TRIMESTRE}::integer = 2 THEN 13 WHEN $P{TRIMESTRE}::integer = 3 THEN 26 WHEN $P{TRIMESTRE}::integer = 4 THEN 39 END)) = 12 THEN cdm.cantidad ELSE 0 END) AS sem_12,
+    SUM(CASE WHEN (EXTRACT(WEEK FROM cd.fecha_control)::integer - (CASE WHEN $P{TRIMESTRE}::integer = 1 THEN 0 WHEN $P{TRIMESTRE}::integer = 2 THEN 13 WHEN $P{TRIMESTRE}::integer = 3 THEN 26 WHEN $P{TRIMESTRE}::integer = 4 THEN 39 END)) = 13 THEN cdm.cantidad ELSE 0 END) AS sem_13,
     SUM(cdm.cantidad) AS total_periodo
 FROM 
     control_diario_medicamento cdm
@@ -55,7 +76,7 @@ GROUP BY
     med.descripcionmedicamento
 ORDER BY 
     m.descripcion ASC, 
-    med.descripcionmedicamento ASC]]>
+    med.descripcionmedicamento ASC;]]>
 	</queryString>
 	<field name="presentacion" class="java.lang.String">
 		<property name="com.jaspersoft.studio.field.name" value="presentacion"/>
@@ -172,96 +193,96 @@ ORDER BY
 				</textElement>
 				<textFieldExpression><![CDATA["Descripción Medicina"]]></textFieldExpression>
 			</textField>
-			<textField>
+			<textField textAdjust="StretchHeight">
 				<reportElement x="176" y="87" width="45" height="18" uuid="82619666-ac9b-4dc6-80af-d82d2a7b4457"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="8" isBold="true"/>
 				</textElement>
-				<textFieldExpression><![CDATA["S1"]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$P{LBL_SEM_1}]]></textFieldExpression>
 			</textField>
-			<textField>
+			<textField textAdjust="StretchHeight">
 				<reportElement x="223" y="87" width="45" height="18" uuid="56d8a5d4-cd88-4297-8acb-28b0937b97a8"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="8" isBold="true"/>
 				</textElement>
-				<textFieldExpression><![CDATA["S2"]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$P{LBL_SEM_2}]]></textFieldExpression>
 			</textField>
-			<textField>
+			<textField textAdjust="StretchHeight">
 				<reportElement x="270" y="87" width="45" height="18" uuid="8d03ae35-5735-4fe3-8759-8409b585b94f"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="8" isBold="true"/>
 				</textElement>
-				<textFieldExpression><![CDATA["S3"]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$P{LBL_SEM_3}]]></textFieldExpression>
 			</textField>
-			<textField>
+			<textField textAdjust="StretchHeight">
 				<reportElement x="317" y="87" width="45" height="18" uuid="8749f383-77b9-4c65-9ef2-2ea21cb5cc2c"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="8" isBold="true"/>
 				</textElement>
-				<textFieldExpression><![CDATA["S4"]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$P{LBL_SEM_4}]]></textFieldExpression>
 			</textField>
-			<textField>
+			<textField textAdjust="StretchHeight">
 				<reportElement x="364" y="87" width="45" height="18" uuid="54e12cfe-4bfc-47cb-b227-fe2cc672b1ec"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="8" isBold="true"/>
 				</textElement>
-				<textFieldExpression><![CDATA["S5"]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$P{LBL_SEM_5}]]></textFieldExpression>
 			</textField>
-			<textField>
+			<textField textAdjust="StretchHeight">
 				<reportElement x="411" y="87" width="45" height="18" uuid="75830c3f-ac1c-4386-9211-d8a6c70e8eda"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="8" isBold="true"/>
 				</textElement>
-				<textFieldExpression><![CDATA["S6"]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$P{LBL_SEM_6}]]></textFieldExpression>
 			</textField>
-			<textField>
+			<textField textAdjust="StretchHeight">
 				<reportElement x="458" y="87" width="45" height="18" uuid="9aabbe94-dd11-40dd-b1b7-4f83790a86e3"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="8" isBold="true"/>
 				</textElement>
-				<textFieldExpression><![CDATA["S7"]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$P{LBL_SEM_7}]]></textFieldExpression>
 			</textField>
-			<textField>
+			<textField textAdjust="StretchHeight">
 				<reportElement x="505" y="87" width="45" height="18" uuid="725486df-f5fd-445c-adf7-4dbbdb66cade"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="8" isBold="true"/>
 				</textElement>
-				<textFieldExpression><![CDATA["S8"]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$P{LBL_SEM_8}]]></textFieldExpression>
 			</textField>
-			<textField>
+			<textField textAdjust="StretchHeight">
 				<reportElement x="552" y="87" width="45" height="18" uuid="e739fd9f-0062-4602-893a-8f4f5bba9da4"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="8" isBold="true"/>
 				</textElement>
-				<textFieldExpression><![CDATA["S9"]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$P{LBL_SEM_9}]]></textFieldExpression>
 			</textField>
-			<textField>
+			<textField textAdjust="StretchHeight">
 				<reportElement x="599" y="87" width="45" height="18" uuid="58e1c0ca-3697-4322-8b85-225f07ba704f"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="8" isBold="true"/>
 				</textElement>
-				<textFieldExpression><![CDATA["S10"]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$P{LBL_SEM_10}]]></textFieldExpression>
 			</textField>
-			<textField>
+			<textField textAdjust="StretchHeight">
 				<reportElement x="646" y="87" width="45" height="18" uuid="cbe89b27-dc69-4d9a-ade0-6eb380640efa"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="8" isBold="true"/>
 				</textElement>
-				<textFieldExpression><![CDATA["S11"]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$P{LBL_SEM_11}]]></textFieldExpression>
 			</textField>
-			<textField>
+			<textField textAdjust="StretchHeight">
 				<reportElement x="693" y="87" width="45" height="18" uuid="2d5a0f47-4967-4351-a7ba-79101bf9ca06"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="8" isBold="true"/>
 				</textElement>
-				<textFieldExpression><![CDATA["S12"]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$P{LBL_SEM_12}]]></textFieldExpression>
 			</textField>
-			<textField>
+			<textField textAdjust="StretchHeight">
 				<reportElement x="740" y="87" width="30" height="18" uuid="3d5a0f47-4967-4351-a7ba-79101bf9ca07"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="8" isBold="true"/>
 				</textElement>
-				<textFieldExpression><![CDATA["S13"]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$P{LBL_SEM_13}]]></textFieldExpression>
 			</textField>
 			<textField>
 				<reportElement x="772" y="87" width="30" height="18" uuid="cf15571d-cbeb-4748-8900-57021564596c"/>

@@ -1,0 +1,231 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.21.5.final using JasperReports Library version 6.21.5-74d586df47b25dbd05bd0957999819196e59934a  -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="ControlDiario" pageWidth="595" pageHeight="842" whenNoDataType="AllSectionsNoDetail" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="cd3df208-1f01-461e-9efe-3ee6c21a9dcb">
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="Intranet"/>
+	<parameter name="LOGO_PATH" class="java.lang.Object"/>
+	<parameter name="fechaInicio" class="java.sql.Date"/>
+	<parameter name="fechaFin" class="java.sql.Date"/>
+	<parameter name="REPORT_DATE" class="java.sql.Date"/>
+	<parameter name="ANO_FILTRO" class="java.lang.String"/>
+	<queryString>
+		<![CDATA[SELECT 
+    m.descripcion AS presentacion,
+    med.descripcionmedicamento AS descripcion_tableta,
+    SUM(CASE WHEN CAST(TO_CHAR(cd.fecha_control, 'D') AS integer) = 1 THEN cdm.cantidad ELSE 0 END) AS lunes,
+    SUM(CASE WHEN CAST(TO_CHAR(cd.fecha_control, 'D') AS integer) = 2 THEN cdm.cantidad ELSE 0 END) AS martes,
+    SUM(CASE WHEN CAST(TO_CHAR(cd.fecha_control, 'D') AS integer) = 3 THEN cdm.cantidad ELSE 0 END) AS miercoles,
+    SUM(CASE WHEN CAST(TO_CHAR(cd.fecha_control, 'D') AS integer) = 4 THEN cdm.cantidad ELSE 0 END) AS jueves,
+    SUM(CASE WHEN CAST(TO_CHAR(cd.fecha_control, 'D') AS integer) = 5 THEN cdm.cantidad ELSE 0 END) AS viernes,
+    SUM(cdm.cantidad) AS total_periodo
+FROM 
+    control_diario_medicamento cdm
+JOIN 
+    control_diario cd ON cdm.uuid_control::text = cd.uuid_control::text
+JOIN 
+    medicamentos med ON cdm.uuid_medicamento::text = med.uuid_medicamento::text
+JOIN 
+    maestro m ON med.uuid_presentacion::text = m.uuid::text
+WHERE 
+    cd.fecha_control >= $P{fechaInicio}::date
+    AND cd.fecha_control <= $P{fechaFin}::date
+    AND CAST(TO_CHAR(cd.fecha_control, 'D') AS integer) BETWEEN 1 AND 5
+GROUP BY 
+    m.descripcion, 
+    med.descripcionmedicamento
+ORDER BY 
+    m.descripcion ASC, 
+    med.descripcionmedicamento ASC;]]>
+	</queryString>
+	<field name="presentacion" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="presentacion"/>
+		<property name="com.jaspersoft.studio.field.label" value="presentacion"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="maestro"/>
+	</field>
+	<field name="descripcion_tableta" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="descripcion_tableta"/>
+		<property name="com.jaspersoft.studio.field.label" value="descripcion_tableta"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="medicamentos"/>
+	</field>
+	<field name="lunes" class="java.lang.Long">
+		<property name="com.jaspersoft.studio.field.name" value="lunes"/>
+		<property name="com.jaspersoft.studio.field.label" value="lunes"/>
+	</field>
+	<field name="martes" class="java.lang.Long">
+		<property name="com.jaspersoft.studio.field.name" value="martes"/>
+		<property name="com.jaspersoft.studio.field.label" value="martes"/>
+	</field>
+	<field name="miercoles" class="java.lang.Long">
+		<property name="com.jaspersoft.studio.field.name" value="miercoles"/>
+		<property name="com.jaspersoft.studio.field.label" value="miercoles"/>
+	</field>
+	<field name="jueves" class="java.lang.Long">
+		<property name="com.jaspersoft.studio.field.name" value="jueves"/>
+		<property name="com.jaspersoft.studio.field.label" value="jueves"/>
+	</field>
+	<field name="viernes" class="java.lang.Long">
+		<property name="com.jaspersoft.studio.field.name" value="viernes"/>
+		<property name="com.jaspersoft.studio.field.label" value="viernes"/>
+	</field>
+	<field name="total_periodo" class="java.lang.Long">
+		<property name="com.jaspersoft.studio.field.name" value="total_periodo"/>
+		<property name="com.jaspersoft.studio.field.label" value="total_periodo"/>
+	</field>
+	<group name="GroupPresentacion">
+		<groupExpression><![CDATA[$F{presentacion}]]></groupExpression>
+		<groupHeader>
+			<band height="22">
+				<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				<textField>
+					<reportElement x="0" y="2" width="250" height="18" uuid="efd27119-3e6f-4f32-93ae-5bbb1bc7edf8"/>
+					<textElement verticalAlignment="Middle">
+						<font size="10" isBold="true"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{presentacion}]]></textFieldExpression>
+				</textField>
+			</band>
+		</groupHeader>
+	</group>
+	<title>
+		<band height="5">
+			<property name="com.jaspersoft.studio.unit.height" value="px"/>
+		</band>
+	</title>
+	<pageHeader>
+		<band height="81">
+			<textField>
+				<reportElement x="80" y="50" width="400" height="25" uuid="fb662883-2563-41a5-ac4f-aaed2e1b6ed5">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Center">
+					<font size="12" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Periodo desde " + new java.text.SimpleDateFormat("dd/MM/yyyy").format($P{fechaInicio}) + " al " + new java.text.SimpleDateFormat("dd/MM/yyyy").format($P{fechaFin})]]></textFieldExpression>
+			</textField>
+			<image>
+				<reportElement x="5" y="5" width="100" height="50" uuid="32701bfc-f5f4-4ff5-9e16-3495a9f98de1"/>
+				<imageExpression><![CDATA[$P{LOGO_PATH} != null ? $P{LOGO_PATH} : "X:/ServicioMedico/serviciomedico/src/main/resources/icons/Logo_Turismo.png"]]></imageExpression>
+			</image>
+			<staticText>
+				<reportElement mode="Opaque" x="115" y="30" width="330" height="20" uuid="43255c8a-4105-463c-8206-9922a1f2b1cc"/>
+				<textElement textAlignment="Center">
+					<font size="13" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Entrega de Medicinas Semanal]]></text>
+			</staticText>
+		</band>
+	</pageHeader>
+	<columnHeader>
+		<band height="22">
+			<property name="com.jaspersoft.studio.unit.height" value="px"/>
+			<staticText>
+				<reportElement x="0" y="2" width="150" height="18" uuid="a6a82a5f-5798-45c4-83f0-8b3edaeffac4"/>
+				<textElement verticalAlignment="Middle">
+					<font size="9" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Descripción Medicina]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="175" y="2" width="45" height="18" uuid="6651e369-da54-4a01-8055-867b47b166a7"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="9" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Lunes]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="231" y="2" width="45" height="18" uuid="a65ac497-c787-4b49-aa91-bfa39e2ccfea"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="9" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Martes]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="295" y="2" width="50" height="18" uuid="179adf62-7742-4201-be5c-68d38b798114"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="9" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Miércoles]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="363" y="2" width="45" height="18" uuid="b8521597-ea38-4d07-85f2-8ce72e26ccd9"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="9" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Jueves]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="431" y="2" width="45" height="18" uuid="1ffef8fb-3374-4bd1-b0ae-25331a342e3e"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="9" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Viernes]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="502" y="2" width="50" height="18" uuid="2ffef8fb-3374-4bd1-b0ae-25331a342e4f"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="9" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Total]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="20">
+			<property name="com.jaspersoft.studio.unit.height" value="px"/>
+			<textField>
+				<reportElement x="10" y="1" width="160" height="18" uuid="c89f3bbc-1e90-4e74-80c4-676d3be84ba7"/>
+				<textElement verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{descripcion_tableta}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="175" y="1" width="45" height="18" uuid="f7aec030-0d85-4176-88f2-a73813fe7503"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{lunes}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="231" y="1" width="45" height="18" uuid="1a7ee9d9-e858-47d1-8393-4b687ea784fe"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{martes}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="295" y="1" width="50" height="18" uuid="9cf6fe23-fcd3-431d-a3a4-bd347265d058"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{miercoles}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="363" y="1" width="45" height="18" uuid="1de6d506-2652-43d6-905c-c88dfaff0a23"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{jueves}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="431" y="1" width="45" height="18" uuid="01ce2a5e-43c9-48d3-b69f-3e6aca4c3cb1"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{viernes}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="502" y="1" width="50" height="18" uuid="3ffef8fb-3374-4bd1-b0ae-25331a342e50"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{total_periodo}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<summary>
+		<band height="40" splitType="Stretch">
+			<property name="com.jaspersoft.studio.unit.height" value="px"/>
+		</band>
+	</summary>
+</jasperReport>

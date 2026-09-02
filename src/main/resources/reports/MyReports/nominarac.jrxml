@@ -1,0 +1,1553 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.21.5.final using JasperReports Library version 6.21.5-74d586df47b25dbd05bd0957999819196e59934a  -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="nominarac" pageWidth="595" pageHeight="842" whenNoDataType="NoPages" columnWidth="535" leftMargin="30" rightMargin="30" topMargin="20" bottomMargin="20" uuid="4dcc89d9-6c58-405c-bbae-b21628e29311">
+	<property name="ireport.scriptlethandling" value="0"/>
+	<import value="java.util.*"/>
+	<import value="net.sf.jasperreports.engine.data.*"/>
+	<import value="net.sf.jasperreports.engine.*"/>
+	<parameter name="logo" class="java.lang.String" isForPrompting="false"/>
+	<parameter name="nombre_organismo" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA["MINISTERIO PRUEBA"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="fec_ini" class="java.util.Date" isForPrompting="false">
+		<defaultValueExpression><![CDATA[new java.sql.Date(2005-1900,3-1,25)]]></defaultValueExpression>
+	</parameter>
+	<parameter name="fec_fin" class="java.util.Date" isForPrompting="false">
+		<defaultValueExpression><![CDATA[new java.sql.Date(2005-1900,3-15,25)]]></defaultValueExpression>
+	</parameter>
+	<parameter name="semana_anio" class="java.lang.Integer" isForPrompting="false"/>
+	<parameter name="id_grupo_nomina" class="java.lang.Long">
+		<defaultValueExpression><![CDATA[new java.lang.Long(20)]]></defaultValueExpression>
+	</parameter>
+	<parameter name="numero_nomina" class="java.lang.Integer" isForPrompting="false">
+		<defaultValueExpression><![CDATA[new java.lang.Integer(0)]]></defaultValueExpression>
+	</parameter>
+	<parameter name="nombre_nomina" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA["ORDINARIA"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="nomina_estatus" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA["A"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="nombre_uno" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA[null]]></defaultValueExpression>
+	</parameter>
+	<parameter name="cargo_uno" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA[null]]></defaultValueExpression>
+	</parameter>
+	<parameter name="nombramiento_uno" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA[null]]></defaultValueExpression>
+	</parameter>
+	<parameter name="cargo_dos" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA[null]]></defaultValueExpression>
+	</parameter>
+	<parameter name="nombre_dos" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA[null]]></defaultValueExpression>
+	</parameter>
+	<parameter name="nombramiento_dos" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA[null]]></defaultValueExpression>
+	</parameter>
+	<parameter name="cargo_tres" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA[null]]></defaultValueExpression>
+	</parameter>
+	<parameter name="nombramiento_tres" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA[null]]></defaultValueExpression>
+	</parameter>
+	<parameter name="nombre_tres" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA[null]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[SELECT  max(g.cod_grupo_nomina) as codgno, max(g.nombre) as gruponomina, max(g.periodicidad) as periodicidad,
+        max(d.nombre) as tipopersonal, max(d.cod_tipo_personal) as codtno,
+        max(b.fecha_ingreso) as ingresoorganismo, b.codigo_nomina as codrac, max(b.estatus) as estatus,
+        max(b.forma_pago) as formapago, max(b.cuenta_nomina) as cuenta_nomina,
+	max(e.cedula) as codtra, e.primer_nombre as primer_nombre, e.segundo_nombre as segundo_nombre,
+	e.primer_apellido as primer_apellido, e.segundo_apellido as segundo_apellido,
+        k.cod_cargo as codigocargo, k.descripcion_cargo as cargo,
+        j.cod_dependencia as codcen, j.nombre as nombreunidad, b.sueldo_basico as suebas,
+        c.cod_concepto as codcon, c.descripcion as  descon, a.id_ultima_nomina as id_contador,
+	a.unidades as unidades, a.monto_asigna as asigna, a.monto_deduce as deduce,
+        a.documento_soporte as documento, max(i.cod_unidad_administ) as unidad,
+        max(i.nombre) as nomunidad, k.grado as grado, fp.cod_frecuencia_pago as frecon
+                      
+  FROM ultimanomina a,   trabajador b, concepto c, tipoPersonal d, 
+       personal e, conceptoTipoPersonal f, grupoNomina g, 
+       unidadEjecutora h,dependencia j, cargo k,
+       unidadadministradora i, administradorauel au,
+       frecuenciaTipoPersonal ftp, frecuenciaPago fp
+     
+    WHERE a.id_grupo_nomina         	=  $P{id_grupo_nomina}
+      AND a.numero_nomina 		=  $P{numero_nomina}
+      AND g.id_grupo_nomina            	=  a.id_grupo_nomina
+      AND d.id_tipo_personal             =  a.id_tipo_personal
+      AND b.id_tipo_personal            =  d.id_tipo_personal
+      AND b.id_trabajador      		=  a.id_trabajador
+      AND e.id_personal		     	=  b.id_personal
+      AND j.id_dependencia         	=  b.id_dependencia
+      AND j.id_administradora_uel       =  au.id_administradora_uel
+      AND h.id_unidad_ejecutora        	=  au.id_unidad_ejecutora
+      AND k.id_cargo             	=  b.id_cargo
+      AND f.id_concepto_tipo_personal	=  a.id_concepto_tipo_personal
+      AND c.id_concepto                 =  f.id_concepto
+      AND i.id_unidad_administradora    = au.id_unidad_administradora 
+      AND a.id_frecuencia_tipo_personal = ftp.id_frecuencia_tipo_personal
+      AND ftp.id_frecuencia_pago  = fp.id_frecuencia_pago
+
+group by d.cod_tipo_personal, i.cod_unidad_administ,b.codigo_nomina, e.cedula, e.primer_nombre, e.segundo_nombre,
+	e.primer_apellido, e.segundo_apellido, k.cod_cargo, k.descripcion_cargo, b.sueldo_basico,
+        j.cod_dependencia, j.nombre, c.cod_concepto, c.descripcion, a.id_ultima_nomina,
+	a.unidades, a.monto_asigna, a.monto_deduce,  a.documento_soporte,  k.grado, fp.cod_frecuencia_pago
+          
+order by  d.cod_tipo_personal,i.cod_unidad_administ, b.codigo_nomina, e.cedula, c.cod_concepto]]>
+	</queryString>
+	<field name="codgno" class="java.lang.Integer"/>
+	<field name="gruponomina" class="java.lang.String"/>
+	<field name="periodicidad" class="java.lang.String"/>
+	<field name="tipopersonal" class="java.lang.String"/>
+	<field name="codtno" class="java.lang.String"/>
+	<field name="ingresoorganismo" class="java.util.Date"/>
+	<field name="codrac" class="java.lang.Integer"/>
+	<field name="estatus" class="java.lang.String"/>
+	<field name="formapago" class="java.lang.String"/>
+	<field name="cuenta_nomina" class="java.lang.String"/>
+	<field name="codtra" class="java.lang.Integer"/>
+	<field name="primer_nombre" class="java.lang.String"/>
+	<field name="segundo_nombre" class="java.lang.String"/>
+	<field name="primer_apellido" class="java.lang.String"/>
+	<field name="segundo_apellido" class="java.lang.String"/>
+	<field name="codigocargo" class="java.lang.String"/>
+	<field name="cargo" class="java.lang.String"/>
+	<field name="codcen" class="java.lang.String"/>
+	<field name="nombreunidad" class="java.lang.String"/>
+	<field name="suebas" class="java.lang.Double"/>
+	<field name="codcon" class="java.lang.String"/>
+	<field name="descon" class="java.lang.String"/>
+	<field name="id_contador" class="java.lang.Integer"/>
+	<field name="unidades" class="java.lang.Double"/>
+	<field name="asigna" class="java.lang.Double"/>
+	<field name="deduce" class="java.lang.Double"/>
+	<field name="documento" class="java.lang.String"/>
+	<field name="unidad" class="java.lang.String"/>
+	<field name="nomunidad" class="java.lang.String"/>
+	<field name="grado" class="java.lang.Integer"/>
+	<field name="frecon" class="java.lang.Integer"/>
+	<variable name="test" class="java.lang.String" resetType="None">
+		<variableExpression><![CDATA["test"]]></variableExpression>
+		<initialValueExpression><![CDATA["test"]]></initialValueExpression>
+	</variable>
+	<variable name="v_totasignatrabajador" class="java.lang.Double" resetType="Group" resetGroup="TRABAJADOR" calculation="Sum">
+		<variableExpression><![CDATA[$F{asigna}]]></variableExpression>
+		<initialValueExpression><![CDATA[new java.lang.Double(0.0)]]></initialValueExpression>
+	</variable>
+	<variable name="v_totdeducetrabajador" class="java.lang.Double" resetType="Group" resetGroup="TRABAJADOR" calculation="Sum">
+		<variableExpression><![CDATA[$F{deduce}]]></variableExpression>
+		<initialValueExpression><![CDATA[new java.lang.Double(0.0)]]></initialValueExpression>
+	</variable>
+	<variable name="v_totdeducecodcen" class="java.lang.Double" calculation="Sum">
+		<variableExpression><![CDATA[$F{deduce}]]></variableExpression>
+		<initialValueExpression><![CDATA[new java.lang.Double(0.0)]]></initialValueExpression>
+	</variable>
+	<variable name="v_totasignacodcen" class="java.lang.Double" calculation="Sum">
+		<variableExpression><![CDATA[$F{asigna}]]></variableExpression>
+		<initialValueExpression><![CDATA[new java.lang.Double(0.0)]]></initialValueExpression>
+	</variable>
+	<variable name="v_totasignatipopersonal" class="java.lang.Double" resetType="Group" resetGroup="TIPOPERSONAL" calculation="Sum">
+		<variableExpression><![CDATA[$F{asigna}]]></variableExpression>
+		<initialValueExpression><![CDATA[new java.lang.Double(0.0)]]></initialValueExpression>
+	</variable>
+	<variable name="v_totdeducetipopersonal" class="java.lang.Double" resetType="Group" resetGroup="TIPOPERSONAL" calculation="Sum">
+		<variableExpression><![CDATA[$F{deduce}]]></variableExpression>
+		<initialValueExpression><![CDATA[new java.lang.Double(0.0)]]></initialValueExpression>
+	</variable>
+	<variable name="v_totasignagrupo" class="java.lang.Double" calculation="Sum">
+		<variableExpression><![CDATA[$F{asigna}]]></variableExpression>
+		<initialValueExpression><![CDATA[new java.lang.Double(0.0)]]></initialValueExpression>
+	</variable>
+	<variable name="v_totdeducegrupo" class="java.lang.Double" calculation="Sum">
+		<variableExpression><![CDATA[$F{deduce}]]></variableExpression>
+		<initialValueExpression><![CDATA[new java.lang.Double(0.0)]]></initialValueExpression>
+	</variable>
+	<variable name="v_conttipopersonal" class="java.lang.Integer" resetType="Group" resetGroup="TIPOPERSONAL" calculation="Count">
+		<variableExpression><![CDATA[$V{v_conceptos}.intValue()==0?new Integer(1):null]]></variableExpression>
+		<initialValueExpression><![CDATA[new java.lang.Integer(0)]]></initialValueExpression>
+	</variable>
+	<variable name="v_contgrupo" class="java.lang.Integer" calculation="Count">
+		<variableExpression><![CDATA[$V{v_conceptos}.intValue()==0?new Integer(1):null]]></variableExpression>
+		<initialValueExpression><![CDATA[new java.lang.Integer(0)]]></initialValueExpression>
+	</variable>
+	<variable name="v_neto" class="java.lang.Double" resetType="Group" resetGroup="TRABAJADOR">
+		<variableExpression><![CDATA[new java.lang.Double
+($V{v_totasignatrabajador}.doubleValue()  -
+$V{v_totdeducetrabajador}.doubleValue()
+)]]></variableExpression>
+		<initialValueExpression><![CDATA[new java.lang.Double(0.0)]]></initialValueExpression>
+	</variable>
+	<variable name="v_nomtra" class="java.lang.String" resetType="Group" resetGroup="TRABAJADOR">
+		<variableExpression><![CDATA[$F{primer_apellido} + " " + $F{segundo_apellido} + ", " + $F{primer_nombre} + " " + $F{segundo_nombre}]]></variableExpression>
+	</variable>
+	<variable name="v_documento" class="java.lang.String" resetType="Group" resetGroup="CONCEPTO">
+		<variableExpression><![CDATA[$F{descon} + " " + $V{aux_documento}]]></variableExpression>
+	</variable>
+	<variable name="v_totasignauadm" class="java.lang.Double" resetType="Group" resetGroup="UNIDADADMINISTRADORA" calculation="Sum">
+		<variableExpression><![CDATA[$F{asigna}]]></variableExpression>
+		<initialValueExpression><![CDATA[new java.lang.Double(0.0)]]></initialValueExpression>
+	</variable>
+	<variable name="v_totdeduceuadm" class="java.lang.Double" resetType="Group" resetGroup="UNIDADADMINISTRADORA" calculation="Sum">
+		<variableExpression><![CDATA[$F{deduce}]]></variableExpression>
+		<initialValueExpression><![CDATA[new java.lang.Double(0.0)]]></initialValueExpression>
+	</variable>
+	<variable name="v_contuadm" class="java.lang.Integer" resetType="Group" resetGroup="UNIDADADMINISTRADORA" calculation="Count">
+		<variableExpression><![CDATA[$V{v_conceptos}.intValue()==0?new Integer(1):null]]></variableExpression>
+		<initialValueExpression><![CDATA[new java.lang.Integer(0)]]></initialValueExpression>
+	</variable>
+	<variable name="aux_documento" class="java.lang.String" resetType="None">
+		<variableExpression><![CDATA[$F{documento}==null?"":$F{documento}]]></variableExpression>
+	</variable>
+	<variable name="v_contcodcen" class="java.lang.Integer" calculation="Count">
+		<variableExpression><![CDATA[$V{v_conceptos}.intValue()==0?new Integer(1):null]]></variableExpression>
+		<initialValueExpression><![CDATA[new java.lang.Integer(0)]]></initialValueExpression>
+	</variable>
+	<variable name="v_conceptos" class="java.lang.Integer" resetType="Group" resetGroup="TRABAJADOR" calculation="Count">
+		<variableExpression><![CDATA[$F{id_contador}]]></variableExpression>
+		<initialValueExpression><![CDATA[new Integer(0)]]></initialValueExpression>
+	</variable>
+	<variable name="v_netouadm" class="java.lang.Double" resetType="Group" resetGroup="UNIDADADMINISTRADORA">
+		<variableExpression><![CDATA[new java.lang.Double
+($V{v_totasignauadm}.doubleValue()  -
+$V{v_totdeduceuadm}.doubleValue()
+)]]></variableExpression>
+		<initialValueExpression><![CDATA[new java.lang.Double(0.0)]]></initialValueExpression>
+	</variable>
+	<variable name="v_netotipopersonal" class="java.lang.Double" resetType="Group" resetGroup="TIPOPERSONAL">
+		<variableExpression><![CDATA[new java.lang.Double
+($V{v_totasignatipopersonal}.doubleValue()  -
+$V{v_totdeducetipopersonal}.doubleValue()
+)]]></variableExpression>
+		<initialValueExpression><![CDATA[new java.lang.Double(0.0)]]></initialValueExpression>
+	</variable>
+	<variable name="v_netogrupo" class="java.lang.Double" resetType="Group" resetGroup="GRUPONOMINA">
+		<variableExpression><![CDATA[new java.lang.Double
+($V{v_totasignagrupo}.doubleValue()  -
+$V{v_totdeducegrupo}.doubleValue()
+)]]></variableExpression>
+		<initialValueExpression><![CDATA[new java.lang.Double(0)]]></initialValueExpression>
+	</variable>
+	<group name="GRUPONOMINA" isStartNewPage="true" isReprintHeaderOnEachPage="true">
+		<groupExpression><![CDATA[$F{codgno}]]></groupExpression>
+		<groupHeader>
+			<band height="14" splitType="Stretch">
+				<staticText>
+					<reportElement key="staticText-6" mode="Transparent" x="0" y="0" width="43" height="12" forecolor="#000000" backcolor="#FFFFFF" uuid="ff76cf1b-d270-4bca-9bcb-4c409bc3cdf5"/>
+					<box>
+						<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement textAlignment="Left" verticalAlignment="Top" rotation="None">
+						<font fontName="Courier New" size="10" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfFontName="Courier" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+						<paragraph lineSpacing="Single"/>
+					</textElement>
+					<text><![CDATA[GRUPO:]]></text>
+				</staticText>
+				<textField evaluationTime="Group" evaluationGroup="GRUPONOMINA" pattern="" isBlankWhenNull="false">
+					<reportElement key="textField-15" mode="Transparent" x="47" y="0" width="24" height="12" forecolor="#000000" backcolor="#FFFFFF" uuid="18bac856-b86c-4420-82f4-870800239164"/>
+					<box>
+						<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement textAlignment="Left" verticalAlignment="Top" rotation="None">
+						<font fontName="Courier New" size="10" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfFontName="Courier" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+						<paragraph lineSpacing="Single"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{codgno}]]></textFieldExpression>
+				</textField>
+				<textField evaluationTime="Group" evaluationGroup="GRUPONOMINA" pattern="" isBlankWhenNull="false">
+					<reportElement key="textField-16" mode="Transparent" x="76" y="0" width="230" height="12" forecolor="#000000" backcolor="#FFFFFF" uuid="0dfeb7f0-98cb-47a0-b10c-66a3a69e0f17"/>
+					<box>
+						<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement textAlignment="Left" verticalAlignment="Top" rotation="None">
+						<font fontName="Courier New" size="10" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfFontName="Courier" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+						<paragraph lineSpacing="Single"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{gruponomina}]]></textFieldExpression>
+				</textField>
+			</band>
+		</groupHeader>
+		<groupFooter>
+			<band height="15" splitType="Stretch">
+				<staticText>
+					<reportElement key="staticText-7" mode="Transparent" x="28" y="3" width="33" height="11" isPrintInFirstWholeBand="true" forecolor="#000000" backcolor="#FFFFFF" uuid="c86e50ef-8d79-4b12-a73f-b4c27c2141a3"/>
+					<box>
+						<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement textAlignment="Left" verticalAlignment="Top" rotation="None">
+						<font fontName="Courier New" size="9" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfFontName="Courier" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+						<paragraph lineSpacing="Single"/>
+					</textElement>
+					<text><![CDATA[TOTAL ]]></text>
+				</staticText>
+				<textField evaluationTime="Group" evaluationGroup="GRUPONOMINA" pattern="" isBlankWhenNull="false">
+					<reportElement key="textField-17" mode="Transparent" x="64" y="3" width="170" height="11" forecolor="#000000" backcolor="#FFFFFF" uuid="0d4b2502-3ec4-4ea9-8ac7-5311df643cf9"/>
+					<box>
+						<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement textAlignment="Left" verticalAlignment="Top" rotation="None">
+						<font fontName="Courier New" size="9" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfFontName="Courier" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+						<paragraph lineSpacing="Single"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{gruponomina}]]></textFieldExpression>
+				</textField>
+				<textField evaluationTime="Group" evaluationGroup="GRUPONOMINA" pattern="###,###" isBlankWhenNull="false">
+					<reportElement key="textField-18" mode="Transparent" x="237" y="3" width="38" height="11" forecolor="#000000" backcolor="#FFFFFF" uuid="f35fd465-166f-4d36-9c00-a9016fee18de"/>
+					<box>
+						<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement textAlignment="Right" verticalAlignment="Top" rotation="None">
+						<font fontName="Courier New" size="9" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfFontName="Courier" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+						<paragraph lineSpacing="Single"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$V{v_contgrupo}]]></textFieldExpression>
+				</textField>
+				<textField evaluationTime="Group" evaluationGroup="GRUPONOMINA" pattern="###,###,##0.00" isBlankWhenNull="false">
+					<reportElement key="textField-19" mode="Transparent" x="276" y="3" width="89" height="11" forecolor="#000000" backcolor="#FFFFFF" uuid="a834cf80-0034-433b-9f41-79573a918e75"/>
+					<box>
+						<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement textAlignment="Right" verticalAlignment="Top" rotation="None">
+						<font fontName="Courier New" size="9" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfFontName="Courier" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+						<paragraph lineSpacing="Single"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$V{v_totasignagrupo}]]></textFieldExpression>
+				</textField>
+				<textField evaluationTime="Group" evaluationGroup="GRUPONOMINA" pattern="###,###,##0.00" isBlankWhenNull="false">
+					<reportElement key="textField-20" mode="Transparent" x="450" y="3" width="83" height="11" forecolor="#000000" backcolor="#FFFFFF" uuid="fcaa72ff-7fe7-43c4-9d82-b1ac9b795774"/>
+					<box>
+						<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement textAlignment="Right" verticalAlignment="Top" rotation="None">
+						<font fontName="Courier New" size="9" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfFontName="Courier" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+						<paragraph lineSpacing="Single"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$V{v_netogrupo}]]></textFieldExpression>
+				</textField>
+				<textField evaluationTime="Group" evaluationGroup="GRUPONOMINA" pattern="###,###,##0.00" isBlankWhenNull="false">
+					<reportElement key="textField-21" mode="Transparent" x="368" y="3" width="77" height="11" forecolor="#000000" backcolor="#FFFFFF" uuid="d68df1a8-824c-4d4d-aaf2-8f7de34561da"/>
+					<box>
+						<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement textAlignment="Right" verticalAlignment="Top" rotation="None">
+						<font fontName="Courier New" size="9" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfFontName="Courier" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+						<paragraph lineSpacing="Single"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$V{v_totdeducegrupo}]]></textFieldExpression>
+				</textField>
+			</band>
+		</groupFooter>
+	</group>
+	<group name="TIPOPERSONAL" isStartNewPage="true" isReprintHeaderOnEachPage="true">
+		<groupExpression><![CDATA[$F{codgno}+
+$F{codtno}]]></groupExpression>
+		<groupHeader>
+			<band height="14" splitType="Stretch">
+				<textField evaluationTime="Group" evaluationGroup="TIPOPERSONAL" pattern="" isBlankWhenNull="false">
+					<reportElement key="textField" mode="Transparent" x="47" y="0" width="24" height="12" forecolor="#000000" backcolor="#FFFFFF" uuid="48079e9d-d571-4fd1-a233-96e342f98080"/>
+					<box>
+						<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement textAlignment="Left" verticalAlignment="Top" rotation="None">
+						<font fontName="Courier New" size="10" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfFontName="Courier" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+						<paragraph lineSpacing="Single"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{codtno}]]></textFieldExpression>
+				</textField>
+				<textField evaluationTime="Group" evaluationGroup="TIPOPERSONAL" pattern="" isBlankWhenNull="false">
+					<reportElement key="textField" mode="Transparent" x="75" y="0" width="230" height="12" forecolor="#000000" backcolor="#FFFFFF" uuid="820de1ff-f0ab-4436-8607-fbcdf6a20b07"/>
+					<box>
+						<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement textAlignment="Left" verticalAlignment="Top" rotation="None">
+						<font fontName="Courier New" size="10" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfFontName="Courier" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+						<paragraph lineSpacing="Single"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{tipopersonal}]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement key="staticText" mode="Transparent" x="0" y="0" width="39" height="12" forecolor="#000000" backcolor="#FFFFFF" uuid="78b26d09-59c8-4aba-a569-677da5a5b02b"/>
+					<box>
+						<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement textAlignment="Left" verticalAlignment="Top" rotation="None">
+						<font fontName="Courier New" size="10" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfFontName="Courier" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+						<paragraph lineSpacing="Single"/>
+					</textElement>
+					<text><![CDATA[TIPO:]]></text>
+				</staticText>
+			</band>
+		</groupHeader>
+		<groupFooter>
+			<band height="15" splitType="Stretch">
+				<textField evaluationTime="Group" evaluationGroup="TIPOPERSONAL" pattern="###,###,##0.00" isBlankWhenNull="false">
+					<reportElement key="textField" mode="Transparent" x="276" y="2" width="89" height="11" forecolor="#000000" backcolor="#FFFFFF" uuid="01fd7027-d26f-4764-a78b-4dc1aa74769a"/>
+					<box>
+						<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement textAlignment="Right" verticalAlignment="Top" rotation="None">
+						<font fontName="Courier New" size="9" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfFontName="Courier" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+						<paragraph lineSpacing="Single"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$V{v_totasignatipopersonal}]]></textFieldExpression>
+				</textField>
+				<textField evaluationTime="Group" evaluationGroup="TIPOPERSONAL" pattern="###,###,##0.00" isBlankWhenNull="false">
+					<reportElement key="textField" mode="Transparent" x="368" y="2" width="77" height="11" forecolor="#000000" backcolor="#FFFFFF" uuid="1ba87f74-9533-4143-b88a-ac2421727e67"/>
+					<box>
+						<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement textAlignment="Right" verticalAlignment="Top" rotation="None">
+						<font fontName="Courier New" size="9" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfFontName="Courier" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+						<paragraph lineSpacing="Single"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$V{v_totdeducetipopersonal}]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement key="staticText" mode="Transparent" x="28" y="2" width="33" height="11" isPrintInFirstWholeBand="true" forecolor="#000000" backcolor="#FFFFFF" uuid="14888aa3-1f25-4c3f-96ef-313adc0f44c9"/>
+					<box>
+						<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement textAlignment="Left" verticalAlignment="Top" rotation="None">
+						<font fontName="Courier New" size="9" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfFontName="Courier" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+						<paragraph lineSpacing="Single"/>
+					</textElement>
+					<text><![CDATA[TOTAL ]]></text>
+				</staticText>
+				<textField evaluationTime="Group" evaluationGroup="TIPOPERSONAL" pattern="" isBlankWhenNull="false">
+					<reportElement key="textField" mode="Transparent" x="64" y="2" width="170" height="11" forecolor="#000000" backcolor="#FFFFFF" uuid="49400606-cc25-4b74-b025-fd0da4723ba6"/>
+					<box>
+						<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement textAlignment="Left" verticalAlignment="Top" rotation="None">
+						<font fontName="Courier New" size="9" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfFontName="Courier" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+						<paragraph lineSpacing="Single"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{tipopersonal}]]></textFieldExpression>
+				</textField>
+				<textField evaluationTime="Group" evaluationGroup="TIPOPERSONAL" pattern="###,###" isBlankWhenNull="false">
+					<reportElement key="textField" mode="Transparent" x="237" y="2" width="38" height="11" forecolor="#000000" backcolor="#FFFFFF" uuid="d44a4066-3e93-4a09-91a6-27bd9ea4163b"/>
+					<box>
+						<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement textAlignment="Right" verticalAlignment="Top" rotation="None">
+						<font fontName="Courier New" size="9" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfFontName="Courier" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+						<paragraph lineSpacing="Single"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$V{v_conttipopersonal}]]></textFieldExpression>
+				</textField>
+				<textField evaluationTime="Group" evaluationGroup="TIPOPERSONAL" pattern="###,###,##0.00" isBlankWhenNull="false">
+					<reportElement key="textField-14" mode="Transparent" x="450" y="2" width="83" height="11" forecolor="#000000" backcolor="#FFFFFF" uuid="6bd6ab35-57e1-46fe-b0d0-6ecc8126264e"/>
+					<box>
+						<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement textAlignment="Right" verticalAlignment="Top" rotation="None">
+						<font fontName="Courier New" size="9" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfFontName="Courier" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+						<paragraph lineSpacing="Single"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$V{v_netotipopersonal}]]></textFieldExpression>
+				</textField>
+			</band>
+		</groupFooter>
+	</group>
+	<group name="UNIDADADMINISTRADORA" isStartNewPage="true" isReprintHeaderOnEachPage="true">
+		<groupExpression><![CDATA[$F{codgno}+
+$F{codtno}+
+$F{unidad}]]></groupExpression>
+		<groupHeader>
+			<band height="15" splitType="Stretch">
+				<staticText>
+					<reportElement key="staticText-1" mode="Transparent" x="0" y="0" width="33" height="12" forecolor="#000000" backcolor="#FFFFFF" uuid="ea8d434c-424d-4237-a17f-2ad2384d9ca9"/>
+					<box>
+						<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement textAlignment="Left" verticalAlignment="Top" rotation="None">
+						<font fontName="Courier New" size="10" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfFontName="Courier" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+						<paragraph lineSpacing="Single"/>
+					</textElement>
+					<text><![CDATA[U.A.:]]></text>
+				</staticText>
+				<textField evaluationTime="Group" evaluationGroup="UNIDADADMINISTRADORA" pattern="" isBlankWhenNull="false">
+					<reportElement key="textField-1" mode="Transparent" x="37" y="0" width="36" height="12" forecolor="#000000" backcolor="#FFFFFF" uuid="23a05734-69e8-4cf1-aa2e-d73edd3af512"/>
+					<box>
+						<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement textAlignment="Left" verticalAlignment="Top" rotation="None">
+						<font fontName="Courier New" size="10" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfFontName="Courier" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+						<paragraph lineSpacing="Single"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{unidad}]]></textFieldExpression>
+				</textField>
+				<textField evaluationTime="Group" evaluationGroup="UNIDADADMINISTRADORA" pattern="" isBlankWhenNull="false">
+					<reportElement key="textField-2" mode="Transparent" x="75" y="0" width="381" height="12" forecolor="#000000" backcolor="#FFFFFF" uuid="dd5b7e4f-f6c2-4486-b18b-1b4ecde0fb6c"/>
+					<box>
+						<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement textAlignment="Left" verticalAlignment="Top" rotation="None">
+						<font fontName="Courier New" size="10" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfFontName="Courier" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+						<paragraph lineSpacing="Single"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{nomunidad}]]></textFieldExpression>
+				</textField>
+				<line>
+					<reportElement key="line-1" mode="Opaque" x="0" y="12" width="530" height="1" forecolor="#000000" backcolor="#FFFFFF" uuid="8ee0f4cd-418d-4f98-a9c6-c26a4900b2dc"/>
+					<graphicElement fill="Solid">
+						<pen lineWidth="0.5" lineStyle="Solid"/>
+					</graphicElement>
+				</line>
+			</band>
+		</groupHeader>
+		<groupFooter>
+			<band height="19" splitType="Stretch">
+				<staticText>
+					<reportElement key="staticText-2" mode="Transparent" x="28" y="2" width="33" height="11" forecolor="#000000" backcolor="#FFFFFF" uuid="b9795452-f743-4242-80ee-540cd45185af"/>
+					<box>
+						<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement textAlignment="Left" verticalAlignment="Top" rotation="None">
+						<font fontName="Courier New" size="9" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfFontName="Courier" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+						<paragraph lineSpacing="Single"/>
+					</textElement>
+					<text><![CDATA[TOTAL]]></text>
+				</staticText>
+				<textField textAdjust="StretchHeight" pattern="" isBlankWhenNull="false">
+					<reportElement key="textField-3" mode="Transparent" x="64" y="2" width="169" height="11" forecolor="#000000" backcolor="#FFFFFF" uuid="6764527c-bd92-449a-92a9-09ed2d908d2b"/>
+					<box>
+						<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement textAlignment="Left" verticalAlignment="Top" rotation="None">
+						<font fontName="Courier New" size="9" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfFontName="Courier" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+						<paragraph lineSpacing="Single"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{nomunidad}]]></textFieldExpression>
+				</textField>
+				<textField evaluationTime="Group" evaluationGroup="UNIDADADMINISTRADORA" pattern="###,###" isBlankWhenNull="false">
+					<reportElement key="textField-4" mode="Transparent" x="237" y="2" width="38" height="11" forecolor="#000000" backcolor="#FFFFFF" uuid="c4572ad7-2655-48f3-a4cf-3139c159f2d8"/>
+					<box>
+						<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement textAlignment="Right" verticalAlignment="Top" rotation="None">
+						<font fontName="Courier New" size="9" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfFontName="Courier" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+						<paragraph lineSpacing="Single"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$V{v_contuadm}]]></textFieldExpression>
+				</textField>
+				<textField evaluationTime="Group" evaluationGroup="UNIDADADMINISTRADORA" pattern="###,###,##0.00" isBlankWhenNull="false">
+					<reportElement key="textField-5" mode="Transparent" x="276" y="2" width="89" height="11" forecolor="#000000" backcolor="#FFFFFF" uuid="d5b0ae6d-01ec-42dd-8dde-c32a2b9517a5"/>
+					<box>
+						<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement textAlignment="Right" verticalAlignment="Top" rotation="None">
+						<font fontName="Courier New" size="9" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfFontName="Courier" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+						<paragraph lineSpacing="Single"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$V{v_totasignauadm}]]></textFieldExpression>
+				</textField>
+				<textField evaluationTime="Group" evaluationGroup="UNIDADADMINISTRADORA" pattern="###,###,##0.00" isBlankWhenNull="false">
+					<reportElement key="textField-6" mode="Transparent" x="368" y="2" width="77" height="11" forecolor="#000000" backcolor="#FFFFFF" uuid="2b2bb43c-159c-4c24-86ac-0d775030b89f"/>
+					<box>
+						<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement textAlignment="Right" verticalAlignment="Top" rotation="None">
+						<font fontName="Courier New" size="9" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfFontName="Courier" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+						<paragraph lineSpacing="Single"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$V{v_totdeduceuadm}]]></textFieldExpression>
+				</textField>
+				<textField evaluationTime="Group" evaluationGroup="UNIDADADMINISTRADORA" pattern="###,###,##0.00" isBlankWhenNull="false">
+					<reportElement key="textField-13" mode="Transparent" x="450" y="2" width="83" height="11" forecolor="#000000" backcolor="#FFFFFF" uuid="312bd183-4e71-491d-8a26-0293badb13ac"/>
+					<box>
+						<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement textAlignment="Right" verticalAlignment="Top" rotation="None">
+						<font fontName="Courier New" size="9" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfFontName="Courier" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+						<paragraph lineSpacing="Single"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$V{v_netouadm}]]></textFieldExpression>
+				</textField>
+			</band>
+		</groupFooter>
+	</group>
+	<group name="TRABAJADOR" isReprintHeaderOnEachPage="true" minHeightToStartNewPage="80">
+		<groupExpression><![CDATA[$F{codgno}+
+$F{codtno}+
+$F{unidad}+
+$F{codtra}]]></groupExpression>
+		<groupHeader>
+			<band height="31" splitType="Prevent">
+				<textField evaluationTime="Group" evaluationGroup="TRABAJADOR" pattern="" isBlankWhenNull="false">
+					<reportElement key="textField" mode="Transparent" x="0" y="0" width="150" height="11" forecolor="#000000" backcolor="#FFFFFF" uuid="a9a3ddd7-8e4a-4ef9-a2e3-e4de27ab4deb"/>
+					<box>
+						<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement textAlignment="Left" verticalAlignment="Top" rotation="None">
+						<font fontName="Courier New" size="9" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfFontName="Courier" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+						<paragraph lineSpacing="Single"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$V{v_nomtra}]]></textFieldExpression>
+				</textField>
+				<textField evaluationTime="Group" evaluationGroup="TRABAJADOR" pattern="#,##0" isBlankWhenNull="false">
+					<reportElement key="textField" mode="Transparent" x="198" y="0" width="60" height="11" forecolor="#000000" backcolor="#FFFFFF" uuid="2a776327-5c15-4095-b985-cd4a14a21fce"/>
+					<box>
+						<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement textAlignment="Left" verticalAlignment="Top" rotation="None">
+						<font fontName="Courier New" size="9" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfFontName="Courier" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+						<paragraph lineSpacing="Single"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{codtra}]]></textFieldExpression>
+				</textField>
+				<textField evaluationTime="Group" evaluationGroup="TRABAJADOR" pattern="dd-MM-yyyy" isBlankWhenNull="false">
+					<reportElement key="textField" mode="Transparent" x="471" y="18" width="62" height="12" forecolor="#000000" backcolor="#FFFFFF" uuid="13b101b4-0c9c-4a74-8166-3cefa10b609b"/>
+					<box>
+						<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement textAlignment="Left" verticalAlignment="Middle" rotation="None">
+						<font fontName="Courier New" size="9" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfFontName="Courier" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+						<paragraph lineSpacing="Single"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{ingresoorganismo}]]></textFieldExpression>
+				</textField>
+				<textField evaluationTime="Group" evaluationGroup="TRABAJADOR" pattern="" isBlankWhenNull="false">
+					<reportElement key="textField" mode="Transparent" x="265" y="0" width="35" height="11" forecolor="#000000" backcolor="#FFFFFF" uuid="371cd4b2-6a04-4855-8433-eb46af1f1b22"/>
+					<box>
+						<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement textAlignment="Left" verticalAlignment="Top" rotation="None">
+						<font fontName="Courier New" size="9" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfFontName="Courier" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+						<paragraph lineSpacing="Single"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{codigocargo}]]></textFieldExpression>
+				</textField>
+				<textField evaluationTime="Group" evaluationGroup="TRABAJADOR" pattern="" isBlankWhenNull="false">
+					<reportElement key="textField" mode="Transparent" x="302" y="0" width="196" height="11" forecolor="#000000" backcolor="#FFFFFF" uuid="685ba9ea-1b58-4b96-99f6-dbc8a36c3ff8"/>
+					<box>
+						<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement textAlignment="Left" verticalAlignment="Top" rotation="None">
+						<font fontName="Courier New" size="9" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfFontName="Courier" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+						<paragraph lineSpacing="Single"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{cargo}]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement key="staticText" mode="Transparent" x="428" y="18" width="42" height="12" forecolor="#000000" backcolor="#FFFFFF" uuid="7f7aa47d-4c5f-4ece-a306-126076824c09"/>
+					<box>
+						<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle" rotation="None">
+						<font fontName="Courier New" size="9" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfFontName="Courier" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+						<paragraph lineSpacing="Single"/>
+					</textElement>
+					<text><![CDATA[Ingreso:]]></text>
+				</staticText>
+				<textField evaluationTime="Group" evaluationGroup="TRABAJADOR" pattern="" isBlankWhenNull="false">
+					<reportElement key="textField" mode="Transparent" x="152" y="0" width="41" height="11" forecolor="#000000" backcolor="#FFFFFF" uuid="de9baa2a-7bd5-41b0-b67d-a36c118bcb00"/>
+					<box>
+						<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement textAlignment="Left" verticalAlignment="Top" rotation="None">
+						<font fontName="Courier New" size="9" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfFontName="Courier" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+						<paragraph lineSpacing="Single"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{codrac}]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement key="staticText" mode="Transparent" x="270" y="18" width="39" height="12" forecolor="#000000" backcolor="#FFFFFF" uuid="f9e45e66-3249-40b0-994c-ec047ffb600d">
+						<printWhenExpression><![CDATA[new java.lang.Boolean(
+$F{formapago}.equals("1"))]]></printWhenExpression>
+					</reportElement>
+					<box>
+						<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement textAlignment="Left" verticalAlignment="Middle" rotation="None">
+						<font fontName="Courier New" size="9" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfFontName="Courier" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+						<paragraph lineSpacing="Single"/>
+					</textElement>
+					<text><![CDATA[Cuenta:]]></text>
+				</staticText>
+				<textField evaluationTime="Group" evaluationGroup="TRABAJADOR" pattern="" isBlankWhenNull="false">
+					<reportElement key="textField" mode="Transparent" x="311" y="18" width="115" height="12" forecolor="#000000" backcolor="#FFFFFF" uuid="1564f27d-324f-4b46-bc89-d0a08e82de21">
+						<printWhenExpression><![CDATA[new java.lang.Boolean(
+$F{formapago}.equals("1"))]]></printWhenExpression>
+					</reportElement>
+					<box>
+						<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement textAlignment="Left" verticalAlignment="Middle" rotation="None">
+						<font fontName="Courier New" size="9" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfFontName="Courier" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+						<paragraph lineSpacing="Single"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{cuenta_nomina}]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement key="staticText" mode="Transparent" x="150" y="18" width="61" height="12" forecolor="#000000" backcolor="#FFFFFF" uuid="94d0d234-ebac-4cbb-ae17-241fc03c42b8"/>
+					<box>
+						<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement textAlignment="Left" verticalAlignment="Middle" rotation="None">
+						<font fontName="Courier New" size="9" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfFontName="Courier" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+						<paragraph lineSpacing="Single"/>
+					</textElement>
+					<text><![CDATA[Forma Pago:]]></text>
+				</staticText>
+				<textField evaluationTime="Group" evaluationGroup="TRABAJADOR" pattern="" isBlankWhenNull="false">
+					<reportElement key="textField" mode="Transparent" x="215" y="18" width="50" height="12" forecolor="#000000" backcolor="#FFFFFF" uuid="fa2f734c-dfd1-4dca-a70f-d935e03c7ddf"/>
+					<box>
+						<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement textAlignment="Left" verticalAlignment="Middle" rotation="None">
+						<font fontName="Courier New" size="9" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfFontName="Courier" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+						<paragraph lineSpacing="Single"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{formapago}.equals("1")?"DEPOSITO":$F{formapago}.equals("2")?"CHEQUE":"OTRO"]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement key="staticText-5" mode="Transparent" x="501" y="0" width="13" height="11" forecolor="#000000" backcolor="#FFFFFF" uuid="0e99234a-69bc-4397-8c3e-1f25cb0986b7"/>
+					<box>
+						<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement textAlignment="Left" verticalAlignment="Middle" rotation="None">
+						<font fontName="Courier New" size="9" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfFontName="Courier" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+						<paragraph lineSpacing="Single"/>
+					</textElement>
+					<text><![CDATA[GR-]]></text>
+				</staticText>
+				<textField evaluationTime="Group" evaluationGroup="TRABAJADOR" pattern="" isBlankWhenNull="false">
+					<reportElement key="textField-12" mode="Transparent" x="514" y="0" width="17" height="11" forecolor="#000000" backcolor="#FFFFFF" uuid="f21c0dc4-b69f-4d83-bd7d-54e7d3e1c19e"/>
+					<box>
+						<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement textAlignment="Left" verticalAlignment="Top" rotation="None">
+						<font fontName="Courier New" size="9" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfFontName="Courier" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+						<paragraph lineSpacing="Single"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{grado}]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement key="staticText-8" mode="Transparent" x="0" y="18" width="77" height="12" forecolor="#000000" backcolor="#FFFFFF" uuid="6b4f9de6-ebb1-4265-9681-277593517fb9"/>
+					<box>
+						<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement textAlignment="Left" verticalAlignment="Middle" rotation="None">
+						<font fontName="Courier New" size="9" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfFontName="Courier" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+						<paragraph lineSpacing="Single"/>
+					</textElement>
+					<text><![CDATA[Sueldo/Salario:]]></text>
+				</staticText>
+				<textField evaluationTime="Group" evaluationGroup="TRABAJADOR" pattern="#,##0.00" isBlankWhenNull="true">
+					<reportElement key="textField-23" mode="Transparent" x="78" y="18" width="68" height="12" forecolor="#000000" backcolor="#FFFFFF" uuid="556b4c5d-16a8-455e-9127-ee0420cd5e61"/>
+					<box>
+						<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement textAlignment="Left" verticalAlignment="Top" rotation="None">
+						<font fontName="Courier New" size="9" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfFontName="Courier" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+						<paragraph lineSpacing="Single"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{suebas}]]></textFieldExpression>
+				</textField>
+			</band>
+		</groupHeader>
+		<groupFooter>
+			<band height="28" splitType="Prevent">
+				<textField evaluationTime="Group" evaluationGroup="TRABAJADOR" pattern="###,###,##0.00" isBlankWhenNull="false">
+					<reportElement key="textField" mode="Transparent" x="282" y="3" width="83" height="11" forecolor="#000000" backcolor="#FFFFFF" uuid="15757ea6-0135-44f8-b419-6184bc1068c7"/>
+					<box>
+						<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement textAlignment="Right" verticalAlignment="Top" rotation="None">
+						<font fontName="Courier New" size="9" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfFontName="Courier" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+						<paragraph lineSpacing="Single"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$V{v_totasignatrabajador}]]></textFieldExpression>
+				</textField>
+				<textField evaluationTime="Group" evaluationGroup="TRABAJADOR" pattern="###,###,##0.00" isBlankWhenNull="false">
+					<reportElement key="textField" mode="Transparent" x="368" y="3" width="77" height="11" forecolor="#000000" backcolor="#FFFFFF" uuid="4ade8259-906c-4ba1-ac28-9dbc3dc2243e"/>
+					<box>
+						<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement textAlignment="Right" verticalAlignment="Top" rotation="None">
+						<font fontName="Courier New" size="9" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfFontName="Courier" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+						<paragraph lineSpacing="Single"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$V{v_totdeducetrabajador}]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement key="staticText" mode="Transparent" x="206" y="3" width="55" height="11" forecolor="#000000" backcolor="#FFFFFF" uuid="9be28f66-13fb-4356-bacf-f1655c9e101b"/>
+					<box>
+						<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement textAlignment="Left" verticalAlignment="Top" rotation="None">
+						<font fontName="Courier New" size="9" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfFontName="Courier" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+						<paragraph lineSpacing="Single"/>
+					</textElement>
+					<text><![CDATA[TOTALES]]></text>
+				</staticText>
+				<textField evaluationTime="Group" evaluationGroup="TRABAJADOR" pattern="###,###,##0.00" isBlankWhenNull="false">
+					<reportElement key="textField" mode="Transparent" x="450" y="3" width="84" height="11" forecolor="#000000" backcolor="#FFFFFF" uuid="a913807d-80fb-4d5d-8448-c47348cf043b"/>
+					<box>
+						<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement textAlignment="Right" verticalAlignment="Top" rotation="None">
+						<font fontName="Courier New" size="9" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfFontName="Courier" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+						<paragraph lineSpacing="Single"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$V{v_neto}]]></textFieldExpression>
+				</textField>
+				<line>
+					<reportElement key="line" mode="Opaque" x="367" y="1" width="78" height="1" forecolor="#000000" backcolor="#FFFFFF" uuid="96cdfea7-1e9b-42a5-8567-939fcdabf06e"/>
+					<graphicElement fill="Solid">
+						<pen lineWidth="0.5" lineStyle="Solid"/>
+					</graphicElement>
+				</line>
+				<line>
+					<reportElement key="line" mode="Opaque" x="285" y="1" width="80" height="1" forecolor="#000000" backcolor="#FFFFFF" uuid="9be8ff13-89c1-4548-824d-bbb4522a776e"/>
+					<graphicElement fill="Solid">
+						<pen lineWidth="0.5" lineStyle="Solid"/>
+					</graphicElement>
+				</line>
+				<staticText>
+					<reportElement key="staticText-3" mode="Transparent" x="437" y="18" width="92" height="9" isRemoveLineWhenBlank="true" forecolor="#000000" backcolor="#FFFFFF" uuid="9c5212f3-576a-414f-a6ea-e7d6ad2c049f">
+						<printWhenExpression><![CDATA[new Boolean(
+$V{v_neto}.doubleValue()<(0))]]></printWhenExpression>
+					</reportElement>
+					<box>
+						<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Bottom" rotation="None">
+						<font fontName="Courier New" size="7" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfFontName="Courier" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+						<paragraph lineSpacing="Single"/>
+					</textElement>
+					<text><![CDATA[***** SOBREGIRADO  ]]></text>
+				</staticText>
+			</band>
+		</groupFooter>
+	</group>
+	<group name="CONCEPTO">
+		<groupExpression><![CDATA[$F{codgno}+
+$F{codtno}+
+$F{unidad}+
+$F{codtra}+
+$F{codcon}+
+$F{documento}+
+$F{asigna}+
+$F{deduce}+
+$F{frecon}]]></groupExpression>
+		<groupHeader>
+			<band splitType="Prevent"/>
+		</groupHeader>
+		<groupFooter>
+			<band splitType="Prevent"/>
+		</groupFooter>
+	</group>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band splitType="Stretch"/>
+	</title>
+	<pageHeader>
+		<band height="50" splitType="Stretch">
+			<staticText>
+				<reportElement key="staticText" mode="Transparent" x="45" y="0" width="318" height="11" forecolor="#000000" backcolor="#FFFFFF" uuid="d67d1511-43e7-40f4-94ae-daaae16c5509"/>
+				<box>
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Top" rotation="None">
+					<font fontName="Courier New" size="8" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfFontName="Courier" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<text><![CDATA[REPUBLICA BOLIVARIANA DE VENEZUELA]]></text>
+			</staticText>
+			<textField evaluationTime="Page" pattern="" isBlankWhenNull="false">
+				<reportElement key="textField-10" mode="Transparent" x="45" y="11" width="273" height="10" forecolor="#000000" backcolor="#FFFFFF" uuid="a029decb-14f5-4e55-bbca-98a9596e1ab7">
+					<printWhenExpression><![CDATA[new java.lang.Boolean(
+$F{asigna}.doubleValue()!=0.0)]]></printWhenExpression>
+				</reportElement>
+				<box>
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Top" rotation="None">
+					<font fontName="Courier New" size="8" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfFontName="Courier" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{nombre_organismo}]]></textFieldExpression>
+			</textField>
+			<image scaleImage="FillFrame" hAlign="Left" vAlign="Top" isUsingCache="false">
+				<reportElement key="image-1" mode="Opaque" x="0" y="0" width="45" height="21" forecolor="#000000" backcolor="#FFFFFF" uuid="68bcd15e-1153-41f7-86e5-769070a547da"/>
+				<box>
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<graphicElement fill="Solid">
+					<pen lineWidth="0.0" lineStyle="Solid"/>
+				</graphicElement>
+				<imageExpression><![CDATA[$P{logo}]]></imageExpression>
+			</image>
+			<staticText>
+				<reportElement key="staticText-4" mode="Transparent" x="467" y="9" width="68" height="9" forecolor="#000000" backcolor="#FFFFFF" uuid="a5804c4b-2435-41a7-b080-e46e637c1136"/>
+				<box>
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Right" verticalAlignment="Top" rotation="None">
+					<font fontName="Courier New" size="5" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfFontName="Courier" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<text><![CDATA[SIGEFIRRHH]]></text>
+			</staticText>
+			<textField textAdjust="StretchHeight" pattern="dd/MM/yyyy h.mm a" isBlankWhenNull="false">
+				<reportElement key="textField-22" mode="Transparent" x="420" y="0" width="115" height="9" forecolor="#000000" backcolor="#FFFFFF" uuid="5bd0420f-4159-4caf-8929-43852525cb4b"/>
+				<box>
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Right" verticalAlignment="Top" rotation="None">
+					<font fontName="Courier New" size="8" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfFontName="Courier" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<textFieldExpression><![CDATA[new Date()]]></textFieldExpression>
+			</textField>
+			<textField evaluationTime="Page" pattern="" isBlankWhenNull="false">
+				<reportElement key="textField" mode="Transparent" x="0" y="36" width="198" height="10" forecolor="#000000" backcolor="#FFFFFF" uuid="65f9d6f0-7879-458c-9057-46591f7a98a3">
+					<printWhenExpression><![CDATA[new java.lang.Boolean(
+$P{numero_nomina}.intValue()!=0)]]></printWhenExpression>
+				</reportElement>
+				<box>
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Top" rotation="None">
+					<font fontName="Courier New" size="8" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfFontName="Courier" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{nombre_nomina}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement key="staticText" mode="Transparent" x="182" y="22" width="240" height="12" forecolor="#000000" backcolor="#FFFFFF" uuid="644471d4-20d2-42f8-9004-dcca86fbc7db"/>
+				<box>
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Top" rotation="None">
+					<font fontName="Courier New" size="10" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfFontName="Courier" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<text><![CDATA[NOMINA  DE PAGO (CODIGO)]]></text>
+			</staticText>
+			<line>
+				<reportElement key="line" mode="Opaque" x="2" y="48" width="530" height="1" forecolor="#000000" backcolor="#FFFFFF" uuid="e1e9b997-8a94-443f-ad60-03baf874bbb2"/>
+				<graphicElement fill="Solid">
+					<pen lineWidth="0.5" lineStyle="Solid"/>
+				</graphicElement>
+			</line>
+			<staticText>
+				<reportElement key="staticText" mode="Transparent" x="286" y="35" width="14" height="10" forecolor="#000000" backcolor="#FFFFFF" uuid="6c4f16f8-cc37-45e4-ab8d-a4bb1a1cc755"/>
+				<box>
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Bottom" rotation="None">
+					<font fontName="Courier New" size="8" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfFontName="Courier" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<text><![CDATA[al]]></text>
+			</staticText>
+			<staticText>
+				<reportElement key="staticText" mode="Transparent" x="459" y="35" width="33" height="10" forecolor="#000000" backcolor="#FFFFFF" uuid="95b8aedb-46fe-49a3-80fd-30f2dc92c910">
+					<printWhenExpression><![CDATA[new java.lang.Boolean(
+$F{periodicidad}.equals("S")&&
+$P{numero_nomina}.intValue()==0)]]></printWhenExpression>
+				</reportElement>
+				<box>
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Top" rotation="None">
+					<font fontName="Courier New" size="8" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfFontName="Courier" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<text><![CDATA[Semana]]></text>
+			</staticText>
+			<textField evaluationTime="Page" pattern="" isBlankWhenNull="false">
+				<reportElement key="textField" mode="Transparent" x="46" y="22" width="106" height="12" forecolor="#000000" backcolor="#FFFFFF" uuid="10742601-e30f-4633-ae2f-1d0a43b0d1ba"/>
+				<box>
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Bottom" rotation="None">
+					<font fontName="Courier New" size="8" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfFontName="Courier" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{nomina_estatus}.equals("A")?"ACTIVO":"EGRESADO"]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement key="staticText" mode="Transparent" x="0" y="22" width="44" height="12" forecolor="#000000" backcolor="#FFFFFF" uuid="a2c6bf81-d0b4-4b0d-a07a-32f4f930cc9e"/>
+				<box>
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Bottom" rotation="None">
+					<font fontName="Courier New" size="8" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfFontName="Courier" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<text><![CDATA[PERSONAL]]></text>
+			</staticText>
+			<textField pattern="dd/MM/yyyy" isBlankWhenNull="false">
+				<reportElement key="textField-7" mode="Transparent" x="207" y="35" width="77" height="10" forecolor="#000000" backcolor="#FFFFFF" uuid="77a38e00-7fb9-457f-93b2-bc916db7549f"/>
+				<box>
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Right" verticalAlignment="Bottom" rotation="None">
+					<font fontName="Courier New" size="8" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfFontName="Courier" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{fec_ini}]]></textFieldExpression>
+			</textField>
+			<textField evaluationTime="Page" pattern="" isBlankWhenNull="true">
+				<reportElement key="textField-9" mode="Transparent" x="495" y="35" width="19" height="10" forecolor="#000000" backcolor="#FFFFFF" uuid="9af792cd-8fe4-4118-9e4a-dc809eabadd8">
+					<printWhenExpression><![CDATA[new java.lang.Boolean(
+$F{periodicidad}.equals("S")&&
+$P{numero_nomina}.intValue()==0)]]></printWhenExpression>
+				</reportElement>
+				<box>
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Right" verticalAlignment="Top" rotation="None">
+					<font fontName="Courier New" size="8" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfFontName="Courier" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{semana_anio}]]></textFieldExpression>
+			</textField>
+			<textField pattern="dd/MM/yyyy" isBlankWhenNull="false">
+				<reportElement key="textField-11" mode="Transparent" x="305" y="35" width="77" height="10" forecolor="#000000" backcolor="#FFFFFF" uuid="d0d585bb-90f6-4c57-9c30-c761078fe231"/>
+				<box>
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Bottom" rotation="None">
+					<font fontName="Courier New" size="8" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfFontName="Courier" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{fec_fin}]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageHeader>
+	<columnHeader>
+		<band splitType="Stretch"/>
+	</columnHeader>
+	<detail>
+		<band height="15" splitType="Prevent">
+			<textField evaluationTime="Group" evaluationGroup="CONCEPTO" pattern="" isBlankWhenNull="false">
+				<reportElement key="textField" mode="Transparent" x="36" y="0" width="29" height="11" forecolor="#000000" backcolor="#FFFFFF" uuid="d9326f29-9279-43bc-91b5-540913b89204"/>
+				<box>
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Top" rotation="None">
+					<font fontName="Courier New" size="9" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfFontName="Courier" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{codcon}]]></textFieldExpression>
+			</textField>
+			<textField textAdjust="StretchHeight" pattern="" isBlankWhenNull="true">
+				<reportElement key="textField" mode="Transparent" x="67" y="0" width="190" height="11" forecolor="#000000" backcolor="#FFFFFF" uuid="0afeeb1a-1e04-4281-8420-862a222149dd">
+					<printWhenExpression><![CDATA[new java.lang.Boolean(
+!($V{v_documento}==null))]]></printWhenExpression>
+				</reportElement>
+				<box>
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Top" rotation="None">
+					<font fontName="Courier New" size="9" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfFontName="Courier" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{v_documento}]]></textFieldExpression>
+			</textField>
+			<textField evaluationTime="Group" evaluationGroup="CONCEPTO" pattern="###,###,##0.00" isBlankWhenNull="false">
+				<reportElement key="textField" mode="Transparent" x="286" y="0" width="79" height="11" forecolor="#000000" backcolor="#FFFFFF" uuid="e65bd6b8-d857-4e87-85bc-44fe55643686">
+					<printWhenExpression><![CDATA[new java.lang.Boolean(
+$F{asigna}.doubleValue()!=0.0)]]></printWhenExpression>
+				</reportElement>
+				<box>
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Right" verticalAlignment="Top" rotation="None">
+					<font fontName="Courier New" size="9" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfFontName="Courier" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{asigna}]]></textFieldExpression>
+			</textField>
+			<textField evaluationTime="Group" evaluationGroup="CONCEPTO" pattern="###,###,##0.00" isBlankWhenNull="false">
+				<reportElement key="textField" mode="Transparent" x="368" y="0" width="77" height="11" forecolor="#000000" backcolor="#FFFFFF" uuid="c74e4d30-8f98-468d-8d83-1e80a69075cb">
+					<printWhenExpression><![CDATA[new java.lang.Boolean(
+$F{deduce}.doubleValue()!=0.0)]]></printWhenExpression>
+				</reportElement>
+				<box>
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Right" verticalAlignment="Top" rotation="None">
+					<font fontName="Courier New" size="9" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfFontName="Courier" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{deduce}]]></textFieldExpression>
+			</textField>
+			<textField evaluationTime="Group" evaluationGroup="CONCEPTO" pattern="#,##0.00" isBlankWhenNull="false">
+				<reportElement key="textField" mode="Transparent" x="261" y="0" width="24" height="11" forecolor="#000000" backcolor="#FFFFFF" uuid="f0810dd4-608e-47df-802a-d25d357306a9">
+					<printWhenExpression><![CDATA[new java.lang.Boolean(
+$F{unidades}.doubleValue()!=0.0)]]></printWhenExpression>
+				</reportElement>
+				<box>
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Right" verticalAlignment="Top" rotation="None">
+					<font fontName="Courier New" size="9" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfFontName="Courier" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{unidades}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<columnFooter>
+		<band splitType="Stretch"/>
+	</columnFooter>
+	<pageFooter>
+		<band height="30" splitType="Stretch">
+			<textField textAdjust="StretchHeight" pattern="dd/MM/yyyy h.mm a" isBlankWhenNull="false">
+				<reportElement key="textField" mode="Transparent" x="0" y="19" width="115" height="9" forecolor="#000000" backcolor="#FFFFFF" uuid="468cbd7b-014a-4652-be18-da222d33d92d"/>
+				<box>
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Top" rotation="None">
+					<font fontName="Courier New" size="8" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfFontName="Courier" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<textFieldExpression><![CDATA[new Date()]]></textFieldExpression>
+			</textField>
+			<textField pattern="" isBlankWhenNull="false">
+				<reportElement key="textField" mode="Transparent" x="316" y="9" width="174" height="19" forecolor="#000000" backcolor="#FFFFFF" uuid="ddc09c39-a0d1-4d60-b168-8a3b1be5a603"/>
+				<box>
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Right" verticalAlignment="Bottom" rotation="None">
+					<font fontName="Courier New" size="8" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfFontName="Courier" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Pag. " + $V{PAGE_NUMBER} + " de "]]></textFieldExpression>
+				<anchorNameExpression><![CDATA["http://www.sun.com"]]></anchorNameExpression>
+			</textField>
+			<textField evaluationTime="Report" pattern="" isBlankWhenNull="false">
+				<reportElement key="textField" mode="Transparent" x="498" y="9" width="36" height="19" forecolor="#000000" backcolor="#FFFFFF" uuid="af6c6770-fcbd-4f52-a27f-6cf8413e9577"/>
+				<box>
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Bottom" rotation="None">
+					<font fontName="Courier New" size="8" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfFontName="Courier" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<textFieldExpression><![CDATA["" + $V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageFooter>
+	<lastPageFooter>
+		<band height="116" splitType="Stretch">
+			<line>
+				<reportElement key="line-3" mode="Opaque" x="192" y="15" width="150" height="1" forecolor="#000000" backcolor="#FFFFFF" uuid="e7ff190c-6ed4-4d7a-bf7e-4f78a364ac33">
+					<printWhenExpression><![CDATA[new java.lang.Boolean(
+!$P{nombre_dos}.equals(null))]]></printWhenExpression>
+				</reportElement>
+				<graphicElement fill="Solid">
+					<pen lineWidth="0.5" lineStyle="Solid"/>
+				</graphicElement>
+			</line>
+			<textField pattern="" isBlankWhenNull="true">
+				<reportElement key="textField-9" mode="Opaque" x="194" y="16" width="150" height="10" forecolor="#000000" backcolor="#FFFFFF" uuid="d2a28c99-86a6-439d-858a-a5f608ba7bfd"/>
+				<box>
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Top" rotation="None">
+					<font fontName="Courier New" size="8" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfFontName="Courier" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{nombre_dos}]]></textFieldExpression>
+			</textField>
+			<textField textAdjust="StretchHeight" pattern="" isBlankWhenNull="true">
+				<reportElement key="textField-10" mode="Opaque" x="194" y="26" width="150" height="10" forecolor="#000000" backcolor="#FFFFFF" uuid="b8cbd99f-bfbc-4f5f-a584-64c607f704b3"/>
+				<box>
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Top" rotation="None">
+					<font fontName="Courier New" size="8" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfFontName="Courier" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{cargo_dos}]]></textFieldExpression>
+			</textField>
+			<textField textAdjust="StretchHeight" pattern="" isBlankWhenNull="true">
+				<reportElement key="textField-11" mode="Opaque" x="194" y="43" width="150" height="10" forecolor="#000000" backcolor="#FFFFFF" uuid="d614fcc4-1583-4cc9-8a5f-3a111782c134"/>
+				<box>
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Top" rotation="None">
+					<font fontName="Courier New" size="8" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfFontName="Courier" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{nombramiento_dos}]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement key="line-2" mode="Opaque" x="3" y="15" width="150" height="1" forecolor="#000000" backcolor="#FFFFFF" uuid="1432b817-65e0-4bc5-82c7-b3099796cc43">
+					<printWhenExpression><![CDATA[new java.lang.Boolean(
+!$P{nombre_uno}.equals(null))]]></printWhenExpression>
+				</reportElement>
+				<graphicElement fill="Solid">
+					<pen lineWidth="0.5" lineStyle="Solid"/>
+				</graphicElement>
+			</line>
+			<textField pattern="" isBlankWhenNull="true">
+				<reportElement key="textField" mode="Opaque" x="2" y="16" width="150" height="10" forecolor="#000000" backcolor="#FFFFFF" uuid="a0ca0424-7ad8-4b57-bfa5-4f127cf2b92d"/>
+				<box>
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Top" rotation="None">
+					<font fontName="Courier New" size="8" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfFontName="Courier" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{nombre_uno}]]></textFieldExpression>
+			</textField>
+			<textField textAdjust="StretchHeight" pattern="" isBlankWhenNull="true">
+				<reportElement key="textField" mode="Opaque" x="2" y="26" width="150" height="10" forecolor="#000000" backcolor="#FFFFFF" uuid="71d69ea9-af51-4636-934a-42496206de1c"/>
+				<box>
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Top" rotation="None">
+					<font fontName="Courier New" size="8" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfFontName="Courier" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{cargo_uno}]]></textFieldExpression>
+			</textField>
+			<textField textAdjust="StretchHeight" pattern="" isBlankWhenNull="true">
+				<reportElement key="textField" mode="Opaque" x="2" y="43" width="150" height="10" forecolor="#000000" backcolor="#FFFFFF" uuid="cec42cf3-8493-408b-8dff-a041b270dec7"/>
+				<box>
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Top" rotation="None">
+					<font fontName="Courier New" size="8" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfFontName="Courier" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{nombramiento_uno}]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement key="line-4" mode="Opaque" x="383" y="15" width="150" height="1" forecolor="#000000" backcolor="#FFFFFF" uuid="dd3d1ef9-f7a9-40b8-8e94-cf7fe1eea310">
+					<printWhenExpression><![CDATA[new java.lang.Boolean(
+!$P{nombre_tres}.equals(null))]]></printWhenExpression>
+				</reportElement>
+				<graphicElement fill="Solid">
+					<pen lineWidth="0.5" lineStyle="Solid"/>
+				</graphicElement>
+			</line>
+			<textField pattern="" isBlankWhenNull="true">
+				<reportElement key="textField-12" mode="Opaque" x="385" y="16" width="150" height="10" forecolor="#000000" backcolor="#FFFFFF" uuid="8030216d-50b3-4bb0-bf3c-110064e2a4c5"/>
+				<box>
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Top" rotation="None">
+					<font fontName="Courier New" size="8" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfFontName="Courier" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{nombre_tres}]]></textFieldExpression>
+			</textField>
+			<textField textAdjust="StretchHeight" pattern="" isBlankWhenNull="true">
+				<reportElement key="textField-13" mode="Opaque" x="385" y="26" width="150" height="10" forecolor="#000000" backcolor="#FFFFFF" uuid="f9cded5d-cadf-4b60-833a-ce9a2b3096a0"/>
+				<box>
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Top" rotation="None">
+					<font fontName="Courier New" size="8" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfFontName="Courier" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{cargo_tres}]]></textFieldExpression>
+			</textField>
+			<textField textAdjust="StretchHeight" pattern="" isBlankWhenNull="true">
+				<reportElement key="textField-14" mode="Opaque" x="385" y="43" width="150" height="10" forecolor="#000000" backcolor="#FFFFFF" uuid="801aee6e-cf5a-492a-86c6-33786502da7e"/>
+				<box>
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Top" rotation="None">
+					<font fontName="Courier New" size="8" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfFontName="Courier" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{nombramiento_tres}]]></textFieldExpression>
+			</textField>
+			<textField textAdjust="StretchHeight" pattern="dd/MM/yyyy h.mm a" isBlankWhenNull="false">
+				<reportElement key="textField-24" mode="Transparent" x="1" y="104" width="115" height="9" forecolor="#000000" backcolor="#FFFFFF" uuid="95f42dd0-8536-4da7-844a-0f8b5a586f28"/>
+				<box>
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Top" rotation="None">
+					<font fontName="Courier New" size="8" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfFontName="Courier" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<textFieldExpression><![CDATA[new Date()]]></textFieldExpression>
+			</textField>
+			<textField pattern="" isBlankWhenNull="false">
+				<reportElement key="textField-25" mode="Transparent" x="317" y="94" width="174" height="19" forecolor="#000000" backcolor="#FFFFFF" uuid="d1809318-6053-4b1a-922b-957efd23e8df"/>
+				<box>
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Right" verticalAlignment="Bottom" rotation="None">
+					<font fontName="Courier New" size="8" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfFontName="Courier" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Pag. " + $V{PAGE_NUMBER} + " de "]]></textFieldExpression>
+				<anchorNameExpression><![CDATA["http://www.sun.com"]]></anchorNameExpression>
+			</textField>
+			<textField evaluationTime="Report" pattern="" isBlankWhenNull="false">
+				<reportElement key="textField-26" mode="Transparent" x="499" y="94" width="36" height="19" forecolor="#000000" backcolor="#FFFFFF" uuid="b6169783-9899-488c-acd0-edfdeba3cfff"/>
+				<box>
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Bottom" rotation="None">
+					<font fontName="Courier New" size="8" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfFontName="Courier" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<textFieldExpression><![CDATA["" + $V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+		</band>
+	</lastPageFooter>
+	<summary>
+		<band splitType="Stretch"/>
+	</summary>
+</jasperReport>

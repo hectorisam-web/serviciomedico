@@ -87,6 +87,17 @@ public class SecurityConfig {
             .requestMatchers(HttpMethod.POST, "/api/citas/**").hasAnyAuthority("Control Diario", "Administracion", "Administrador de Sistemas",  "Personal Médico", "Farmacia")
             .requestMatchers(HttpMethod.PUT, "/api/citas/**").hasAnyAuthority("Control Diario",  "Administracion", "Administrador de Sistemas" , "Personal Médico", "Farmacia")  
                 
+             // 4.2 Reportes Generales y Módulos
+            .requestMatchers("/api/reportes/**").hasAnyAuthority(
+                "Administracion", "Control Diario", "Farmacia", "Inventario", "Administrador de Sistemas", "Personal Médico", "Personal Medico"
+            )
+            .requestMatchers("/api/inventario/**").hasAnyAuthority(
+                "Administracion", "Inventario", "Administrador de Sistemas"
+            )
+            .requestMatchers("/api/farmacia/**").hasAnyAuthority(
+                "Administracion", "Farmacia", "Seguimiento", "Administrador de Sistemas", "Personal Médico"
+            )
+                
             // 5. Roles
             .requestMatchers("/api/roles/guardar").hasAuthority("Administracion")
             .requestMatchers("/api/roles/listar", "/api/roles/activos" ).hasAnyAuthority("Administracion", "Administrador de Sistemas", "Administrador de Servico Medico", "Roles", "Usuarios")
