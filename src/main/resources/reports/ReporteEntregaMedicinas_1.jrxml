@@ -1,35 +1,35 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Created with Jaspersoft Studio version 6.21.5.final using JasperReports Library version 6.21.5-74d586df47b25dbd05bd0957999819196e59934a  -->
-<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="ControlDiario" pageWidth="595" pageHeight="842" whenNoDataType="AllSectionsNoDetail" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="cd3df208-1f01-461e-9efe-3ee6c21a9dcb">
+<!-- Created with Jaspersoft Studio version 6.20.6.final using JasperReports Library version 6.20.6-5c96b6aa8a39ac1dc6b6bea4b81168e16dd39231  -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="ControlDiario" pageWidth="595" pageHeight="842" whenNoDataType="AllSectionsNoDetail" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" isSummaryNewPage="true" uuid="cd3df208-1f01-461e-9efe-3ee6c21a9dcb">
 	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
-	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="Intranet"/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="CentroMedico"/>
 	<parameter name="LOGO_PATH" class="java.lang.Object"/>
 	<parameter name="fechaInicio" class="java.sql.Date"/>
 	<parameter name="fechaFin" class="java.sql.Date"/>
 	<parameter name="REPORT_DATE" class="java.sql.Date"/>
 	<parameter name="ANO_FILTRO" class="java.lang.String"/>
-	<queryString>
+	<queryString language="plsql">
 		<![CDATA[SELECT 
     m.descripcion AS presentacion,
     med.descripcionmedicamento AS descripcion_tableta,
-    SUM(CASE WHEN CAST(TO_CHAR(cd.fecha_control, 'D') AS integer) = 1 THEN cdm.cantidad ELSE 0 END) AS lunes,
-    SUM(CASE WHEN CAST(TO_CHAR(cd.fecha_control, 'D') AS integer) = 2 THEN cdm.cantidad ELSE 0 END) AS martes,
-    SUM(CASE WHEN CAST(TO_CHAR(cd.fecha_control, 'D') AS integer) = 3 THEN cdm.cantidad ELSE 0 END) AS miercoles,
-    SUM(CASE WHEN CAST(TO_CHAR(cd.fecha_control, 'D') AS integer) = 4 THEN cdm.cantidad ELSE 0 END) AS jueves,
-    SUM(CASE WHEN CAST(TO_CHAR(cd.fecha_control, 'D') AS integer) = 5 THEN cdm.cantidad ELSE 0 END) AS viernes,
+    SUM(CASE WHEN EXTRACT(ISODOW FROM cd.fecha_control) = 1 THEN cdm.cantidad ELSE 0 END) AS lunes,
+    SUM(CASE WHEN EXTRACT(ISODOW FROM cd.fecha_control) = 2 THEN cdm.cantidad ELSE 0 END) AS martes,
+    SUM(CASE WHEN EXTRACT(ISODOW FROM cd.fecha_control) = 3 THEN cdm.cantidad ELSE 0 END) AS miercoles,
+    SUM(CASE WHEN EXTRACT(ISODOW FROM cd.fecha_control) = 4 THEN cdm.cantidad ELSE 0 END) AS jueves,
+    SUM(CASE WHEN EXTRACT(ISODOW FROM cd.fecha_control) = 5 THEN cdm.cantidad ELSE 0 END) AS viernes,
     SUM(cdm.cantidad) AS total_periodo
 FROM 
     control_diario_medicamento cdm
 JOIN 
-    control_diario cd ON cdm.uuid_control::text = cd.uuid_control::text
+    control_diario cd ON cdm.uuid_control = cd.uuid_control
 JOIN 
-    medicamentos med ON cdm.uuid_medicamento::text = med.uuid_medicamento::text
+    medicamentos med ON cdm.uuid_medicamento = med.uuid_medicamento
 JOIN 
-    maestro m ON med.uuid_presentacion::text = m.uuid::text
+    maestro m ON med.uuid_presentacion = m.uuid
 WHERE 
     cd.fecha_control >= $P{fechaInicio}::date
     AND cd.fecha_control <= $P{fechaFin}::date
-    AND CAST(TO_CHAR(cd.fecha_control, 'D') AS integer) BETWEEN 1 AND 5
+    AND EXTRACT(ISODOW FROM cd.fecha_control) BETWEEN 1 AND 5
 GROUP BY 
     m.descripcion, 
     med.descripcionmedicamento
@@ -37,40 +37,17 @@ ORDER BY
     m.descripcion ASC, 
     med.descripcionmedicamento ASC;]]>
 	</queryString>
-	<field name="presentacion" class="java.lang.String">
-		<property name="com.jaspersoft.studio.field.name" value="presentacion"/>
-		<property name="com.jaspersoft.studio.field.label" value="presentacion"/>
-		<property name="com.jaspersoft.studio.field.tree.path" value="maestro"/>
-	</field>
-	<field name="descripcion_tableta" class="java.lang.String">
-		<property name="com.jaspersoft.studio.field.name" value="descripcion_tableta"/>
-		<property name="com.jaspersoft.studio.field.label" value="descripcion_tableta"/>
-		<property name="com.jaspersoft.studio.field.tree.path" value="medicamentos"/>
-	</field>
-	<field name="lunes" class="java.lang.Long">
-		<property name="com.jaspersoft.studio.field.name" value="lunes"/>
-		<property name="com.jaspersoft.studio.field.label" value="lunes"/>
-	</field>
-	<field name="martes" class="java.lang.Long">
-		<property name="com.jaspersoft.studio.field.name" value="martes"/>
-		<property name="com.jaspersoft.studio.field.label" value="martes"/>
-	</field>
-	<field name="miercoles" class="java.lang.Long">
-		<property name="com.jaspersoft.studio.field.name" value="miercoles"/>
-		<property name="com.jaspersoft.studio.field.label" value="miercoles"/>
-	</field>
-	<field name="jueves" class="java.lang.Long">
-		<property name="com.jaspersoft.studio.field.name" value="jueves"/>
-		<property name="com.jaspersoft.studio.field.label" value="jueves"/>
-	</field>
-	<field name="viernes" class="java.lang.Long">
-		<property name="com.jaspersoft.studio.field.name" value="viernes"/>
-		<property name="com.jaspersoft.studio.field.label" value="viernes"/>
-	</field>
-	<field name="total_periodo" class="java.lang.Long">
-		<property name="com.jaspersoft.studio.field.name" value="total_periodo"/>
-		<property name="com.jaspersoft.studio.field.label" value="total_periodo"/>
-	</field>
+	<field name="presentacion" class="java.lang.String"/>
+	<field name="descripcion_tableta" class="java.lang.String"/>
+	<field name="lunes" class="java.lang.Long"/>
+	<field name="martes" class="java.lang.Long"/>
+	<field name="miercoles" class="java.lang.Long"/>
+	<field name="jueves" class="java.lang.Long"/>
+	<field name="viernes" class="java.lang.Long"/>
+	<field name="total_periodo" class="java.lang.Long"/>
+	<variable name="sumaPresentacion" class="java.lang.Long" resetType="Group" resetGroup="GroupPresentacion" calculation="Sum">
+		<variableExpression><![CDATA[$F{total_periodo}]]></variableExpression>
+	</variable>
 	<group name="GroupPresentacion">
 		<groupExpression><![CDATA[$F{presentacion}]]></groupExpression>
 		<groupHeader>
@@ -85,6 +62,25 @@ ORDER BY
 				</textField>
 			</band>
 		</groupHeader>
+		<groupFooter>
+			<band height="20">
+				<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				<staticText>
+					<reportElement x="10" y="1" width="160" height="18" uuid="aaaa1111-1111-1111-1111-111111111111"/>
+					<textElement verticalAlignment="Middle">
+						<font size="8" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Subtotal presentación:]]></text>
+				</staticText>
+				<textField>
+					<reportElement x="502" y="1" width="50" height="18" uuid="bbbb2222-2222-2222-2222-222222222222"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font size="8" isBold="true"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$V{sumaPresentacion}]]></textFieldExpression>
+				</textField>
+			</band>
+		</groupFooter>
 	</group>
 	<title>
 		<band height="5">
@@ -104,7 +100,7 @@ ORDER BY
 			</textField>
 			<image>
 				<reportElement x="5" y="5" width="100" height="50" uuid="32701bfc-f5f4-4ff5-9e16-3495a9f98de1"/>
-				<imageExpression><![CDATA[$P{LOGO_PATH} != null ? $P{LOGO_PATH} : "X:/ServicioMedico/serviciomedico/src/main/resources/icons/Logo_Turismo.png"]]></imageExpression>
+				<imageExpression><![CDATA["C:/Proyectos/serviciomedico-main/src/main/resources/icons/Logo_Turismo.png"]]></imageExpression>
 			</image>
 			<staticText>
 				<reportElement mode="Opaque" x="115" y="30" width="330" height="20" uuid="43255c8a-4105-463c-8206-9922a1f2b1cc"/>
@@ -224,8 +220,19 @@ ORDER BY
 		</band>
 	</detail>
 	<summary>
-		<band height="40" splitType="Stretch">
+		<band height="220" splitType="Stretch">
 			<property name="com.jaspersoft.studio.unit.height" value="px"/>
+			<subreport>
+				<reportElement x="0" y="10" width="555" height="200" uuid="abcabcab-1111-2222-3333-444455556666"/>
+				<subreportParameter name="fechaInicio">
+					<subreportParameterExpression><![CDATA[$P{fechaInicio}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="fechaFin">
+					<subreportParameterExpression><![CDATA[$P{fechaFin}]]></subreportParameterExpression>
+				</subreportParameter>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression><![CDATA["ConsolidadoPresentacion.jasper"]]></subreportExpression>
+			</subreport>
 		</band>
 	</summary>
 </jasperReport>
