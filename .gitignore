@@ -31,3 +31,23 @@ build/
 
 ### VS Code ###
 .vscode/
+
+### Seguridad - NUNCA subir estos archivos ###
+token.txt
+*token*.txt
+*.token
+*.key
+*.pem
+*.p12
+*.jks
+.env
+.env.local
+.env.*.local
+credentials.json
+config.local.json
+secret*.txt
+password*.txt
+*.secret
+application-local.properties
+application-local.yml
+application-local.yaml
